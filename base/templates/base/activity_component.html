@@ -1,14 +1,21 @@
 <h3>Recent Activities</h3>
-        <hr>
-        {% for message in room_messages %}
-        <div>
-            <small>@{{ message.user }}  {{ message.created|timesince }}</small>
-            <small>replied to "{{message.room}}"</small>
+<hr>
+{% for message in room_messages %}
+<div>
+    <!-- Fixed the URL tag and anchor tag syntax -->
+    <small>
+        <a href="{% url 'userProfile' message.user.id %}">@{{ message.user }}</a>  
+        {{ message.created|timesince }}
+    </small>
+    <small>replied to "{{ message.room }}"</small>
 
-            <p>{{message}}</p>
-            {% if request.user == message.user %}
-            <a href={% url 'delete-message' message.id %} >Delete</a>
-            {% endif %}
-            <hr>
-        </div>
-        {% endfor %}
+    <!-- Display the message content -->
+    <p>{{ message.body }}</p>
+
+    <!-- Conditional for delete link -->
+    {% if request.user == message.user %}
+        <a href="{% url 'delete-message' message.id %}">Delete</a>
+    {% endif %}
+    <hr>
+</div>
+{% endfor %}
