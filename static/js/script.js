@@ -1,4 +1,4 @@
-// // Actions:
+// Actions:
 
 // const closeButton = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
 // <title>remove</title>
@@ -50,6 +50,16 @@ const dropdownButton = document.querySelector(".dropdown-button");
 if (dropdownButton) {
   dropdownButton.addEventListener("click", () => {
     dropdownMenu.classList.toggle("show");
+  });
+}
+
+// Mobile Menu Toggle
+const mobileMenuButton = document.querySelector(".mobile-menu .header__search"); // Mobile Menu Button
+const mobileMenuItems = document.querySelector(".mobile-menuItems"); // The menu containing buttons
+
+if (mobileMenuButton) {
+  mobileMenuButton.addEventListener("click", () => {
+    mobileMenuItems.classList.toggle("show"); // Toggle class for visibility
   });
 }
 
