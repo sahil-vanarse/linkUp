@@ -1,0 +1,97 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Cool Website for Fetching Data</title>
+</head>
+<body>
+
+	<h1>Cool Rooms</h1>
+
+	<div id="rooms-container"></div>
+
+	<script>
+		let roomsContainer = document.getElementById('rooms-container');
+
+		const getRooms = async () => {
+			try {
+				let response = await fetch('http://127.0.0.1:8000/api/rooms/');
+				
+				if (!response.ok) {
+					throw new Error(`HTTP error! Status: ${response.status}`);
+				}
+
+				let rooms = await response.json();
+				let html = '';
+				for (let i = 0; i < rooms.length; i++) {
+					let room = rooms[i];
+					html += `
+						<div>
+							<h3>${room.name}</h3>
+						</div>
+					`;
+				}
+				roomsContainer.innerHTML = html;
+
+			} catch (error) {
+				console.log('ERROR:', error);
+				roomsContainer.innerHTML = `<p style="color:red;">Failed to load rooms. Please try again later.</p>`;
+			}
+		};
+
+		getRooms();
+	</script>
+
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>GitHub Repos</title>
+</head>
+<body>
+
+	<h1>GitHub Repositories</h1>
+
+	<div id="repos-container"></div>
+
+	<script>
+		let reposContainer = document.getElementById('repos-container');
+
+		const getGitHubRepos = async () => {
+			try {
+				let response = await fetch('https://api.github.com/users/octocat/repos');
+				
+				if (!response.ok) {
+					throw new Error(`HTTP error! Status: ${response.status}`);
+				}
+
+				let repos = await response.json();
+				let html = '';
+				for (let i = 0; i < repos.length; i++) {
+					let repo = repos[i];
+					html += `
+						<div>
+							<h3><a href="${repo.html_url}" target="_blank">${repo.name}</a></h3>
+							<p>${repo.description || 'No description available'}</p>
+						</div>
+					`;
+				}
+				reposContainer.innerHTML = html;
+
+			} catch (error) {
+				console.log('ERROR:', error);
+				reposContainer.innerHTML = `<p style="color:red;">Failed to load repositories. Please try again later.</p>`;
+			}
+		};
+
+		getGitHubRepos();
+	</script>
+
+</body>
+</html>
