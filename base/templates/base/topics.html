@@ -31,7 +31,7 @@
               </label>
             </form>
 
-            <ul class="topics__list">
+            <ul class="topics__list" style="max-height: 400px; overflow-y: auto; padding-right: 15px; scrollbar-color: #YourThemeColor #f1f1f1; scrollbar-width: thin;">
               <li>
                 <a href="{% url 'topics' %}" class="active">All <span>{{topics.count}}</span></a>
               </li>
