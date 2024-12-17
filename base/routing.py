@@ -1,8 +1,7 @@
-# base/routing.py
-
-from django.urls import path
+# routing.py
+from django.urls import re_path
 from . import consumers
 
 websocket_urlpatterns = [
-    path('ws/socket-server/', consumers.ChatConsumer.as_asgi()),  # This should match your frontend path
+    re_path(r'ws/room/(?P<room_name>\w+)/$', consumers.ChatConsumer.as_asgi()),
 ]

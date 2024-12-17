@@ -31,9 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-
-    'channels',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,10 +42,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     "corsheaders",
-
 ]
-
-ASGI_APPLICATION = 'linkUp.asgi.application'
 
 AUTH_USER_MODEL = 'base.User'
 
