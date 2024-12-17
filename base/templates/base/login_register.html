@@ -59,26 +59,49 @@
       </div>
       <div class="layout__body">
         <h2 class="auth__tagline">Find your study partner</h2>
-
+  
         <form class="form" action="" method="POST">
           {% csrf_token %}
-          {% for field in form %}
-          <div class="form__group">
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}
+          
+          <!-- Name and Username side by side -->
+          <div class="form__group" style="display: flex; justify-content: space-between;">
+            <div style="flex: 1; margin-right: 10px;">
+              <label for="{{ form.name.id_for_label }}">Name</label>
+              {{ form.name }}
+            </div>
+            <div style="flex: 1;">
+              <label for="{{ form.username.id_for_label }}">Username</label>
+              {{ form.username }}
+            </div>
           </div>
+  
+          <!-- Render all other fields -->
+          {% for field in form %}
+            {% if field.name != 'name' and field.name != 'username' and field.name != 'password1' and field.name != 'password2' %}
+              <div class="form__group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+              </div>
+            {% endif %}
           {% endfor %}
 
+          <!-- Name and Username side by side -->
+          <div class="form__group" style="display: flex; justify-content: space-between;">
+            <div style="flex: 1; margin-right: 10px;">
+              <label for="{{ form.password1.id_for_label }}">Password</label>
+              {{ form.password1 }}
+            </div>
+            <div style="flex: 1;">
+              <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+              {{ form.password2 }}
+            </div>
+          </div>
+  
           <button class="btn btn--main" type="submit">
-            <svg width="32" height="32" viewBox="0 0 32 32">
-              <title>lock</title>
-              <path d="M27 12h-1v-2c0-5.514-4.486-10-10-10s-10 4.486-10 10v2h-1c-0.553 0-1 0.447-1 1v18c0 0.553 0.447 1 1 1h22c0.553 0 1-0.447 1-1v-18c0-0.553-0.447-1-1-1zM8 10c0-4.411 3.589-8 8-8s8 3.589 8 8v2h-16v-2zM26 30h-20v-16h20v16z"></path>
-              <path d="M15 21.694v4.306h2v-4.306c0.587-0.348 1-0.961 1-1.694 0-1.105-0.895-2-2-2s-2 0.895-2 2c0 0.732 0.413 1.345 1 1.694z"></path>
-            </svg>
             Register
           </button>
         </form>
-
+  
         <div class="auth__action">
           <p>Already signed up yet?</p>
           <a href="{% url 'login' %}" class="btn btn--link">Login</a>
@@ -86,6 +109,8 @@
       </div>
     </div>
   </div>
+  
+  
   {% endif %}
 </main>
 

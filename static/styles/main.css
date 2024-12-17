@@ -170,6 +170,7 @@ a {
   height: 0.7rem;
   bottom: 0px;
   right: -6px;
+  background-color: var(--color-success);
 }
 
 .avatar.avatar--medium img {
