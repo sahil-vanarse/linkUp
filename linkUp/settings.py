@@ -132,13 +132,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-MEDIA_URL = '/users_picture/'
+MEDIA_URL = '/user_pictures/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
-MEDIA_ROOT = BASE_DIR / 'static/users_picture'
+MEDIA_ROOT = BASE_DIR / 'static/user_pictures'
 
 # STATIC_ROOT =
 
