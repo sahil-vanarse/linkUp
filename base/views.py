@@ -24,7 +24,7 @@ def loginPage(request):
 
         try:
             user = User.objects.get(email = email)
-        except:
+        except Exception as e:
             messages.error(request, "User does not Exist.")
 
         user = authenticate(request, email=email, password= password)
@@ -63,9 +63,9 @@ def home(request):
     rooms = Room.objects.filter(
         Q(topic__name__icontains = q) | Q(name__icontains = q) | Q(description__icontains = q)
     )
-    topics = Topic.objects.all()[0:10]
+    topics = Topic.objects.all()[:10]
     room_count = rooms.count()
-    room_messages = Message.objects.filter(Q(room__topic__name__icontains=q))[0:4]
+    room_messages = Message.objects.filter(Q(room__topic__name__icontains=q))[:4]
 
     context = {'rooms' : rooms, 'topics' : topics, 'room_count' : room_count, 'room_messages' : room_messages}
 
