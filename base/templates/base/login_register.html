@@ -17,16 +17,16 @@
         <form class="form" action="" method="POST">
           {% csrf_token %}
           <div class="form__group">
-            <label for="username">Email</label>
-            <input id="username" name="email" type="email" placeholder="e.g. sahilvanarse13@gmail.com" value="{{ request.POST.username }}" />
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="e.g. sahilvanarse13@gmail.com" value="{{ request.POST.email }}" />
           </div>
           <div class="form__group">
             <label for="password">Password</label>
             <input id="password" name="password" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
-            {% if form.password.errors %}
+            {% if messages %}
             <ul class="error-messages">
-              {% for error in form.password.errors %}
-                <li>{{ error }}</li>
+              {% for message in messages %}
+                <li>{{ message }}</li>
               {% endfor %}
             </ul>
             {% endif %}
@@ -63,39 +63,43 @@
         <form class="form" action="" method="POST">
           {% csrf_token %}
           
-          <!-- Name and Username side by side -->
+          <!-- Name and Username fields -->
           <div class="form__group" style="display: flex; justify-content: space-between;">
             <div style="flex: 1; margin-right: 10px;">
-              <label for="{{ form.name.id_for_label }}">Name</label>
-              {{ form.name }}
+              <label for="name">Name</label>
+              <input type="text" name="name" id="name" placeholder="Enter your name" required>
             </div>
             <div style="flex: 1;">
-              <label for="{{ form.username.id_for_label }}">Username</label>
-              {{ form.username }}
+              <label for="username">Username</label>
+              <input type="text" name="username" id="username" placeholder="Enter username" required>
             </div>
           </div>
-  
-          <!-- Render all other fields -->
-          {% for field in form %}
-            {% if field.name != 'name' and field.name != 'username' and field.name != 'password1' and field.name != 'password2' %}
-              <div class="form__group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-              </div>
-            {% endif %}
-          {% endfor %}
+          
+          <!-- Email field -->
+          <div class="form__group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" placeholder="Enter your email" required>
+          </div>
 
-          <!-- Name and Username side by side -->
+          <!-- Password fields -->
           <div class="form__group" style="display: flex; justify-content: space-between;">
             <div style="flex: 1; margin-right: 10px;">
-              <label for="{{ form.password1.id_for_label }}">Password</label>
-              {{ form.password1 }}
+              <label for="password1">Password</label>
+              <input type="password" name="password1" id="password1" placeholder="Enter password" required>
             </div>
             <div style="flex: 1;">
-              <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
-              {{ form.password2 }}
+              <label for="password2">Confirm Password</label>
+              <input type="password" name="password2" id="password2" placeholder="Confirm Password" required>
             </div>
           </div>
+
+          {% if messages %}
+          <ul class="error-messages">
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
   
           <button class="btn btn--main" type="submit">
             Register
@@ -103,14 +107,12 @@
         </form>
   
         <div class="auth__action">
-          <p>Already signed up yet?</p>
+          <p>Already signed up?</p>
           <a href="{% url 'login' %}" class="btn btn--link">Login</a>
         </div>
       </div>
     </div>
   </div>
-  
-  
   {% endif %}
 </main>
 

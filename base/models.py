@@ -1,15 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import UserManager
-from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
-class CustomUserManager(UserManager):
+
+class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
-        """
-        Create and return a regular user with an email and password.
-        """
+        """Create and return a regular user with an email and password."""
         if not email:
-            raise ValueError(_('The Email field must be set'))
+            raise ValueError('The Email field must be set')
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -17,11 +14,14 @@ class CustomUserManager(UserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        """
-        Create and return a superuser with an email and password.
-        """
+        """Create and return a superuser."""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
 
         return self.create_user(email, password, **extra_fields)
 
@@ -30,13 +30,16 @@ class User(AbstractUser):
     name = models.CharField(max_length=200, null=True)
     email = models.EmailField(unique=True, null=True)
     bio = models.TextField(null=True)
+
     avatar = models.ImageField(null=True, default="avatar.svg")
 
-    USERNAME_FIELD = 'email'  # Use email as the username
-    REQUIRED_FIELDS = []  # Remove 'username' from the required fields
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []  # You can include additional fields if needed
 
-    objects = CustomUserManager()  # Set the custom manager here
+    objects = UserManager()  # Use the custom manager
 
+    def __str__(self):
+        return self.email
 
 
 # Create your models here.
@@ -46,9 +49,10 @@ class Topic(models.Model):
     def __str__(self):
         return self.name
 
+
 class Room(models.Model):
     host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    topic = models.ForeignKey(Topic, on_delete= models.SET_NULL, null=True)
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     participants = models.ManyToManyField(User, related_name='participants', blank=True)
@@ -57,10 +61,10 @@ class Room(models.Model):
 
     class Meta:
         ordering = ['-updated', '-created']
-    
+
     def __str__(self):
         return self.name
-    
+
 
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -71,9 +75,6 @@ class Message(models.Model):
 
     class Meta:
         ordering = ['-updated', '-created']
-        
+
     def __str__(self):
         return self.body[:50]
-    
-
-
