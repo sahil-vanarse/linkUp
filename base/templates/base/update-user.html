@@ -20,18 +20,34 @@
                     </div>
                 </div>
                 <div class="layout__body">
-                    <form class="form" action="" method="POST", enctype='multipart/form-data'>
-                      {% csrf_token %}
-                      {% for field in form %}
+                    <form class="form" action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
                         <div class="form__group">
-                            <label for="profile_pic">{{field.label}}</label>
-                            {{field}}
+                            <label for="avatar">Avatar</label>
+                            {{ form.avatar }}
                         </div>
-                      {% endfor %}
 
-              
+                        <div class="form__group" style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1; margin-right: 10px;">
+                                <label for="username">Username</label>
+                                {{ form.username }}
+                            </div>
+                            <div style="flex: 1; margin-right: 10px;">
+                                <label for="name">Name</label>
+                                {{ form.name }}
+                            </div>
+                            <div style="flex: 1;">
+                                <label for="email">Email</label>
+                                {{ form.email }}
+                            </div>
+                        </div>
 
-                  
+                        <div class="form__group">
+                            <label for="bio">Bio</label>
+                            {{ form.bio }}
+                        </div>
+
                         <div class="form__action">
                             <a class="btn btn--dark" href="{% url 'home' %}">Cancel</a>
                             <button class="btn btn--main" type="submit">Update</button>
@@ -40,7 +56,6 @@
                 </div>
             </div>
         </div>
-      </div>
     </main>
 
 {% endblock content %}

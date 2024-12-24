@@ -27,6 +27,7 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     name = models.CharField(max_length=200, null=True)
     email = models.EmailField(unique=True, null=True, db_index=True)
+    username = models.CharField(max_length=200, null=True, blank=True, unique=True)  # Make username optional and unique
     bio = models.TextField(null=True)
     avatar = models.ImageField(null=True, default="avatar.svg")
     search_vector = SearchVectorField(null=True)
@@ -44,6 +45,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
 
 
 class Topic(models.Model):
