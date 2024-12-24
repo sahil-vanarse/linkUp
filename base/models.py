@@ -1,10 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
-
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
-        """Create and return a regular user with an email and password."""
         if not email:
             raise ValueError('The Email field must be set')
         email = self.normalize_email(email)
@@ -14,7 +12,6 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        """Create and return a superuser."""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -25,24 +22,21 @@ class UserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
-
 class User(AbstractUser):
     name = models.CharField(max_length=200, null=True)
     email = models.EmailField(unique=True, null=True)
     bio = models.TextField(null=True)
-
     avatar = models.ImageField(null=True, default="avatar.svg")
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []  # You can include additional fields if needed
+    REQUIRED_FIELDS = []  # No additional fields required for superuser creation
 
-    objects = UserManager()  # Use the custom manager
+    objects = UserManager()
 
     def __str__(self):
         return self.email
 
 
-# Create your models here.
 class Topic(models.Model):
     name = models.CharField(max_length=200)
 

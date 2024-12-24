@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,11 +42,9 @@ INSTALLED_APPS = [
 
     'rest_framework',
     "corsheaders",
-    'channels',
 ]
 
 AUTH_USER_MODEL = 'base.User'
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -149,13 +147,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOW_ALL_ORIGINS = True
-
-
-
-# =====================================
-# 🚀🚀🚀 RAZORPAY CONFIGURATION 🚀🚀🚀
-# =====================================
-
-# Razorpay API keys (Use environment variables for security)
-RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID', 'your_razorpay_key_id')
-RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET', 'your_razorpay_key_secret')
