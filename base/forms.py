@@ -1,6 +1,6 @@
-from django.forms import ModelForm
+from django.forms import ModelForm # type: ignore
 from .models import Room, User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm # type: ignore
 
 class MyUserCreationForm(UserCreationForm):
     class Meta:

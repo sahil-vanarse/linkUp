@@ -1,7 +1,7 @@
-from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.contrib.postgres.fields import ArrayField
-from django.contrib.postgres.search import SearchVectorField
+from django.db import models # type: ignore
+from django.contrib.auth.models import AbstractUser, BaseUserManager # type: ignore
+from django.contrib.postgres.fields import ArrayField # type: ignore
+from django.contrib.postgres.search import SearchVectorField # type: ignore # type: ignore  
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):

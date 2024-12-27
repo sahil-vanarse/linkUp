@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
-from django.db.models import Q
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from .models import Room, Topic, Message, User
-from .forms import RoomForm, UserForm, MyUserCreationForm
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
+from django.shortcuts import render, redirect # type: ignore
+from django.db.models import Q # type: ignore
+from django.http import HttpResponse # type: ignore
+from django.contrib.auth.decorators import login_required # type: ignore
+from .models import Room, Topic, Message, User # type: ignore
+from .forms import RoomForm, UserForm, MyUserCreationForm # type: ignore
+from django.contrib.auth import authenticate, login, logout # type: ignore
+from django.contrib import messages # type: ignore
 
 def loginPage(request):
     page = 'login'

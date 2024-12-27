@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase # type: ignore
 from base.factories import UserFactory
 
 class UserTest(TestCase):

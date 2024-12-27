@@ -1,4 +1,4 @@
-import factory
+import factory # type: ignore
 from base.models import User
 
 class UserFactory(factory.django.DjangoModelFactory):

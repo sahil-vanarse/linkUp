@@ -1,6 +1,6 @@
-from django.contrib import admin
-from django.contrib.postgres import search
-from .models import Room, Topic, Message, User
+from django.contrib import admin # type: ignore 
+from django.contrib.postgres import search # type: ignore
+from .models import Room, Topic, Message, User # type: ignore
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ['email', 'username', 'name']
