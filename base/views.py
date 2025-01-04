@@ -7,6 +7,10 @@ from .forms import RoomForm, UserForm, MyUserCreationForm # type: ignore
 from django.contrib.auth import authenticate, login, logout # type: ignore
 from django.contrib import messages # type: ignore
 
+from django.utils.dateparse import parse_datetime
+from django.utils.timezone import is_aware, make_aware
+# ... rest of your existing imports
+
 def loginPage(request):
     page = 'login'
     if request.user.is_authenticated:
@@ -47,7 +51,7 @@ def registerPage(request):
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, 'An error occured during registration')
+            messages.error(request, 'An error occurred during registration')
     return render(request, 'base/login_register.html', {'form': form})
 
 def home(request):
@@ -84,6 +88,7 @@ def room(request, pk):
             body=request.POST.get('body')
         )
         room.participants.add(request.user)
+
         return redirect('room', pk=room.id)
 
     context = {

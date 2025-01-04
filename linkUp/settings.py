@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     "corsheaders",
+    # 'channels',  # Removed for real-time communication
 ]
 
 AUTH_USER_MODEL = 'base.User'
@@ -51,7 +52,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
 
     "corsheaders.middleware.CorsMiddleware",
-    # "django.middleware.common.CommonMiddleware",
 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -82,6 +82,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'linkUp.wsgi.application'
+# ASGI_APPLICATION = 'linkUp.asgi.application'  # Removed for real-time communication
+
+# CHANNEL_LAYERS = {  # Removed RabbitMQ configuration
+#     'default': {
+#         'BACKEND': 'channels_rabbitmq.core.RabbitmqChannelLayer',
+#         'CONFIG': {
+#             "host": "amqp://guest:guest@localhost:5672/",
+#         },
+#     },
+# }
 
 
 # Database
@@ -134,6 +144,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/user_pictures/'
 
@@ -143,7 +154,6 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = BASE_DIR / 'static/user_pictures'
 
-# STATIC_ROOT =
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -151,4 +161,7 @@ MEDIA_ROOT = BASE_DIR / 'static/user_pictures'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8000',  # Replace with your allowed origins
+    'http://127.0.0.1:8000',
+]
