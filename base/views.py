@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect # type: ignore
 from django.db.models import Q # type: ignore
 from django.http import HttpResponse # type: ignore
-from django.contrib.auth.decorators import login_required # type: ignore
+from django.contrib.auth.decorators import login_required
+# from kafka import KafkaProducer # type: ignore
 from .models import Room, Topic, Message, User # type: ignore
 from .forms import RoomForm, UserForm, MyUserCreationForm # type: ignore
 from django.contrib.auth import authenticate, login, logout # type: ignore
@@ -76,10 +77,18 @@ def home(request):
     }
     return render(request, 'base/home.html', context)
 
+# views.py
+# Remove this line:
+# from kafka import KafkaProducer
+
 def room(request, pk):
     room = Room.objects.get(id=pk)
     room_messages = room.message_set.all().order_by('-created')
     participants = room.participants.all()
+
+    # Check if the room exists and if the user is a participant
+    if room is None or (request.user not in participants and room.host != request.user):
+        return HttpResponse('You are not allowed to view this room.')
 
     if request.method == 'POST':
         message = Message.objects.create(
@@ -88,6 +97,11 @@ def room(request, pk):
             body=request.POST.get('body')
         )
         room.participants.add(request.user)
+        
+        # Remove these lines:
+        # producer = KafkaProducer(bootstrap_servers='localhost:9092')
+        # producer.send('chat_topic', message.body.encode('utf-8'))
+        # producer.flush()
 
         return redirect('room', pk=room.id)
 

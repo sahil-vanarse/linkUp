@@ -75,7 +75,7 @@
               <span class="room__topics">{{room.topic}}</span>
             </div>
             <div class="room__conversation">
-              <div class="threads scroll">
+              <div class="threads scroll" id="chat-log">
                 {% for message in room_messages %}
                 <div class="thread">
                   <div class="thread__top">
@@ -115,7 +115,8 @@
           <div class="room__message">
             <form action="" method="POST">
               {% csrf_token %}
-              <input type="text" id="message" name="body" placeholder="Write your message here..." required />
+              <input type="text" id="chat-message-input" name="body" placeholder="Write your message here..." required />
+              <button type="submit">Send</button>
             </form>
           </div>
           {% endif %}
@@ -129,7 +130,7 @@
             {% for user in participants %}
             <a href="{% url 'user-profile' user.id %}" class="participant">
               <div class="avatar avatar--medium">
-                <img src="{{user.avatar.url}}" />
+                <img src="{{user.avatar.url}}" alt="User avatar" />
               </div>
               <p>
                 {{user.name|capfirst}}
@@ -142,4 +143,41 @@
         <!-- Participants End -->
       </div>
     </main>
+
+    // In your room.html template
+<script>
+    const roomId = "{{ room.id }}";
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/base/room/'
+        + roomId
+        + '/'
+    );
+
+    chatSocket.onopen = function(e) {
+        console.log('WebSocket connection established');
+    };
+
+    chatSocket.onerror = function(e) {
+        console.error('WebSocket error:', e);
+    };
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        document.querySelector('#chat-log').innerHTML += '<div class="thread">' +
+            '<div class="thread__details">' + data.message + '</div></div>';
+    };
+
+    document.querySelector('#chat-message-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        }
+    });
+</script>
 {% endblock %}
