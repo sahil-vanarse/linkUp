@@ -12,7 +12,7 @@
               </div>
             </div>
             <div class="roomListRoom__content">
-              <a href="{% url 'room' room.id %}" style="color: #71c6dd;">{{room.topic.name}}</a>
+              {% comment %} <a href="{% url 'room' room.id %}" style="color: #71c6dd;">{{room.topic.name}}</a> {% endcomment %}
               <a href="{% url 'room' room.id %}">{{room.name}}</a>
             </div>
             <div class="roomListRoom__meta">
