@@ -37,6 +37,7 @@ from django.contrib.auth import authenticate, login, logout # type: ignore
 from django.contrib import messages # type: ignore
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.core.mail import send_mail  # Import send_mail for sending emails
 
 def loginPage(request):
     """
@@ -87,6 +88,27 @@ def registerPage(request):
             user.username = user.username.lower()
             user.save()
             login(request, user)
+
+            # Send a welcome email to the user
+            welcome_message = (
+                f"Dear {user.username.upper()},\n\n"
+                "We're thrilled to welcome you to the LinkUp family! 🎉\n\n"
+                "Thank you for registering with us. At LinkUp, we believe in creating meaningful connections and empowering individuals to share knowledge, collaborate, and grow together. We are so glad to have you on board.\n\n"
+                "We look forward to helping you explore new opportunities, meet like-minded individuals, and build lasting relationships in our vibrant community.\n\n"
+                "If you have any questions or need assistance, feel free to reach out to us. We're here for you every step of the way!\n\n"
+                "Welcome aboard, and let's make this journey unforgettable! 🚀\n\n"
+                "Best regards,\n"
+                "The LinkUp Team"
+            )
+
+            send_mail(
+                'Welcome to LinkUp!',
+                welcome_message,
+                'sahilvanarse4@gmail.com',  # Replace with your from email
+                [user.email],
+                fail_silently=False,
+            )
+
             return redirect('home')
         else:
             messages.error(request, 'An error occurred during registration')

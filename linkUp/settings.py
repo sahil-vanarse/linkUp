@@ -40,6 +40,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*']
 
 # Application definition: List of installed applications
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -115,6 +116,15 @@ DATABASES = {
     }
 }
 
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465  # SSL port
+EMAIL_USE_SSL = True  # SSL must be True for port 465
+EMAIL_HOST_USER = 'sahilvanarse4@gmail.com'
+EMAIL_HOST_PASSWORD = 'pujz jwvv zglo vlhr'  # Ensure it's correct and no extra spaces
+DEFAULT_FROM_EMAIL = 'sahilvanarse4@gmail.com'  # Default from email address
+
 # Password validation settings
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -165,3 +175,25 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:3000',
 ]
+
+
+# Jazzmin settings for the Django admin interface
+
+JAZZMIN_SETTINGS = {
+    "site_title": "LinkUp Admin",  # Title displayed in the admin site
+    "site_header": "LinkUp",  # Header displayed at the top of the admin site
+    "site_brand": "LinkUp",  # Brand name displayed in the admin site
+    "login_logo": "icons/admin_login_image.svg",  # Logo displayed on the login page
+    "site_logo_classes": "img-circle",  # CSS classes for the site logo
+    "site_icon": "icons/favicon.ico",  # Favicon for the admin site
+    "welcome_sign": "Welcome to the LinkUp, your go-to platform for connecting and collaborating.",  # Welcome message for users
+    "copyright": "Made from ❤️ by Sahil",  # Copyright notice
+    "user_avatar": "profile.photo",  # Path to user avatar image
+    "topmenu_links": [  # Links displayed in the top menu
+        {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},  # Link to the dashboard with permissions
+        {"name": "GitHub", "url": 'https://github.com/sahil-vanarse/linkUp', "new_window": True},  # Link to GitHub repository
+        {"model": "auth.User"},  # Link to the User model
+        {"app": "base"},  # Link to the base app
+    ],
+    "show_ui_builder": True,  # Enable UI builder for customization
+}
