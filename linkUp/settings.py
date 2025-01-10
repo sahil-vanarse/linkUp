@@ -1,11 +1,28 @@
 """
-Django settings for linkUp project.
+Django settings for the linkUp project.
+
+This file contains the configuration settings for the Django application, including
+database settings, middleware, installed applications, and other important settings.
+
+Key Sections:
+- BASE_DIR: Defines the base directory for the project.
+- SECRET_KEY: A secret key for the application, should be kept confidential in production.
+- DEBUG: A boolean that turns on/off debug mode; should be False in production.
+- ALLOWED_HOSTS: A list of strings representing the host/domain names that this Django site can serve.
+- INSTALLED_APPS: A list of all Django applications that are activated in this project.
+- MIDDLEWARE: A list of middleware components that process requests and responses.
+- TEMPLATES: Configuration for template rendering.
+- DATABASES: Database connection settings.
+- AUTH_PASSWORD_VALIDATORS: Validators for user passwords.
+- STATIC and MEDIA files configuration: Settings for serving static and media files.
+- CORS configuration: Settings for Cross-Origin Resource Sharing.
+
 """
 
 from pathlib import Path
 import mimetypes
 
-# Add MIME types for SVG
+# Add MIME types for SVG files to ensure they are served correctly
 mimetypes.add_type("image/svg+xml", ".svg", True)
 mimetypes.add_type("image/svg+xml", ".svgz", True)
 
@@ -18,9 +35,10 @@ SECRET_KEY = 'django-insecure-8xh327^ve7&+t*dj6&5sxop3)^g)$db_oo0nu$w)e0w2uj6&kw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Define the allowed hosts for the application
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*']
 
-# Application definition
+# Application definition: List of installed applications
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -29,19 +47,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
-    'base.apps.BaseConfig',
-    'rest_framework',
-    "corsheaders",
-    'channels',
-    'whitenoise.runserver_nostatic',  # Add this
+    'base.apps.BaseConfig',  # Custom application
+    'rest_framework',  # Django REST framework
+    "corsheaders",  # Middleware for handling CORS
+    'channels',  # Django Channels for WebSocket support
+    'whitenoise.runserver_nostatic',  # Whitenoise for serving static files
 ]
 
+# Specify the custom user model
 AUTH_USER_MODEL = 'base.User'
 
+# Middleware configuration: List of middleware components
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this after SecurityMiddleware
-    "corsheaders.middleware.CorsMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Middleware for serving static files
+    "corsheaders.middleware.CorsMiddleware",  # Middleware for handling CORS
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -50,15 +70,17 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# URL configuration
 ROOT_URLCONF = 'linkUp.urls'
 
+# Template configuration
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'templates'
+            BASE_DIR / 'templates'  # Directory for template files
         ],
-        'APP_DIRS': True,
+        'APP_DIRS': True,  # Enable loading templates from app directories
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -70,29 +92,30 @@ TEMPLATES = [
     },
 ]
 
+# WSGI and ASGI application settings
 WSGI_APPLICATION = 'linkUp.wsgi.application'
 ASGI_APPLICATION = 'linkUp.asgi.application'
 
-# Channel Layers
+# Channel Layers configuration for Django Channels
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        "BACKEND": "channels.layers.InMemoryChannelLayer"  # In-memory channel layer for development
     }
 }
 
-# Database
+# Database configuration
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'linkup',
-        'USER': 'postgres',
-        'PASSWORD': 'S#@5ahil1P',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL database engine
+        'NAME': 'linkUp',  # Database name
+        'USER': 'postgres',  # Database user
+        'PASSWORD': 'S#@5ahil1P',  # Database password
+        'HOST': 'localhost',  # Database host
+        'PORT': '5432',  # Database port
     }
 }
 
-# Password validation
+# Password validation settings
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -108,34 +131,35 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_TZ = True
+# Internationalization settings
+LANGUAGE_CODE = 'en-us'  # Default language
+TIME_ZONE = 'UTC'  # Default time zone
+USE_I18N = True  # Enable internationalization
+USE_TZ = True  # Enable timezone support
 
 # Static files configuration
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = '/static/'  # URL for static files
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Directory for collected static files
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static'
+    BASE_DIR / 'static'  # Additional directories for static files
 ]
 
 # Media files configuration
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'  # URL for media files
+MEDIA_ROOT = BASE_DIR / 'media'  # Directory for uploaded media files
 
-# Whitenoise configuration
+# Whitenoise configuration for serving static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS configuration
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
+# CORS configuration for Cross-Origin Resource Sharing
+CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins
+CORS_ALLOW_CREDENTIALS = True  # Allow credentials
 
+# Specific allowed origins for CORS
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',

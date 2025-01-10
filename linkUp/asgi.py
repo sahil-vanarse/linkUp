@@ -1,20 +1,28 @@
-# asgi.py
+# This file configures the ASGI application for the Django project.
+# It sets up the necessary environment variables and initializes Django.
+# The application supports both HTTP and WebSocket protocols.
+
 import os
+import django
+
+# Set the default settings module for the Django project.
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'linkUp.settings')
+
+# Initialize Django. This must be done before importing any models.
+django.setup()
+
+# Import the necessary modules for ASGI application and Channels routing.
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from channels.security.websocket import AllowedHostsOriginValidator
-from base.routing import websocket_urlpatterns  # adjust the import path based on your app name
+from base.routing import websocket_urlpatterns  # Import WebSocket URL patterns from the base app.
 
-os.environ.setdefault('DJANGO.SETTINGS_MODULE', 'linkUp.settings')
-
+# Define the ASGI application routing.
 application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
-    "websocket": AllowedHostsOriginValidator(
-        AuthMiddlewareStack(
-            URLRouter(
-                websocket_urlpatterns
-            )
+    "http": get_asgi_application(),  # Handle HTTP requests.
+    "websocket": AuthMiddlewareStack(  # Handle WebSocket connections with authentication.
+        URLRouter(
+            websocket_urlpatterns  # Route WebSocket connections to the defined URL patterns.
         )
     ),
 })

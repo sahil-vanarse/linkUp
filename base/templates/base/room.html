@@ -86,7 +86,7 @@
                         </div>
                         <span>@{{message.user.username}}</span>
                       </a>
-                      <span class="thread__date">{{message.created|timesince}} - {{message.created}}</span>
+                      <span class="thread__date">{{message.created|timesince}} ago</span>
                     </div>
 
                     {% if request.user == message.user %}
@@ -112,13 +112,22 @@
           </div>
 
           {% if request.user.is_authenticated %}
-          <div class="room__message">
-            <form action="" method="POST">
+          <div class="room__message" style="margin-left: 30px;">
+            <form action="" method="POST" style="display: flex; align-items: center; gap: 8px; width: 100%;">
               {% csrf_token %}
-              <input type="text" id="chat-message-input" name="body" placeholder="Write your message here..." required />
-              <button type="submit">Send</button>
+              <input 
+                type="text" 
+                id="chat-message-input" 
+                name="body" 
+                placeholder="Write your message here..." 
+                required 
+                style="flex: 1; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"
+              />
+              <button style="margin-bottom: 10px; margin-right: 10px;" type="submit" class="btn btn--main">
+                Send
+              </button>
             </form>
-          </div>
+          </div>          
           {% endif %}
         </div>
         <!-- Room End -->
@@ -144,40 +153,99 @@
       </div>
     </main>
 
-    // In your room.html template
-<script>
-    const roomId = "{{ room.id }}";
-    const chatSocket = new WebSocket(
-        'ws://'
-        + window.location.host
-        + '/ws/base/room/'
-        + roomId
-        + '/'
-    );
-
-    chatSocket.onopen = function(e) {
-        console.log('WebSocket connection established');
-    };
-
-    chatSocket.onerror = function(e) {
-        console.error('WebSocket error:', e);
-    };
-
-    chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        document.querySelector('#chat-log').innerHTML += '<div class="thread">' +
-            '<div class="thread__details">' + data.message + '</div></div>';
-    };
-
-    document.querySelector('#chat-message-input').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message
-            }));
-            messageInputDom.value = '';
-        }
-    });
-</script>
+    <script>
+      const roomId = "{{ room.id }}";
+      let chatSocket;
+  
+      // Function to create WebSocket connection
+      function connectWebSocket() {
+          const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+          const wsUrl = `${wsProtocol}//${window.location.host}/ws/base/room/${roomId}/`;
+          
+          chatSocket = new WebSocket(wsUrl);
+  
+          chatSocket.onopen = function(e) {
+              console.log('WebSocket connection established');
+          };
+  
+          chatSocket.onerror = function(e) {
+              console.error('WebSocket error:', e);
+              setTimeout(connectWebSocket, 5000);
+          };
+  
+          chatSocket.onclose = function(e) {
+              console.log('WebSocket connection closed');
+              setTimeout(connectWebSocket, 5000);
+          };
+  
+          chatSocket.onmessage = function(e) {
+              try {
+                  const data = JSON.parse(e.data);
+                  const messageElement = document.createElement('div');
+                  messageElement.classList.add('thread');
+                  messageElement.innerHTML = `
+                      <div class="thread__top">
+                          <div class="thread__author">
+                              <div class="avatar avatar--small">
+                                  <img src="${data.user_avatar}" alt="User avatar" />
+                              </div>
+                              <span>@${data.username}</span>
+                              <span class="thread__date">${data.timestamp}</span>
+                          </div>
+                      </div>
+                      <div class="thread__details">${data.message}</div>
+                  `;
+                  const chatLog = document.querySelector('#chat-log');
+                  // Insert new message at the top
+                  chatLog.insertBefore(messageElement, chatLog.firstChild);
+                  // Scroll to top to see new message
+                  chatLog.scrollTop = 0;
+              } catch (error) {
+                  console.error('Error processing message:', error);
+              }
+          };
+      }
+  
+      // Initial connection
+      connectWebSocket();
+  
+      // Handle form submission and Enter key press
+      const messageInput = document.querySelector('#chat-message-input');
+      const sendMessage = () => {
+          const message = messageInput.value.trim();
+          if (message && chatSocket.readyState === WebSocket.OPEN) {
+              chatSocket.send(JSON.stringify({
+                  'message': message
+              }));
+              messageInput.value = '';
+              // Optional: Scroll to top after sending
+              const chatLog = document.querySelector('#chat-log');
+              chatLog.scrollTop = 0;
+          }
+      };
+  
+      messageInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+              e.preventDefault();
+              sendMessage();
+          }
+      });
+  
+      // Handle form submit button
+      const form = messageInput.closest('form');
+      if (form) {
+          form.addEventListener('submit', function(e) {
+              e.preventDefault();
+              sendMessage();
+          });
+      }
+  
+      // Add some styling to ensure proper scrolling behavior
+      document.addEventListener('DOMContentLoaded', function() {
+          const chatLog = document.querySelector('#chat-log');
+          chatLog.style.display = 'flex';
+          chatLog.style.flexDirection = 'column-reverse';
+          chatLog.scrollTop = 0;
+      });
+  </script>
 {% endblock %}

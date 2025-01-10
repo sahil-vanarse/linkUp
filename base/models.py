@@ -1,3 +1,53 @@
+"""
+This module defines the data models for the application using Django's ORM.
+
+Models:
+1. User: Extends Django's AbstractUser to create a custom user model with additional fields.
+   - Fields:
+     - name: CharField for the user's name.
+     - email: EmailField that is unique and indexed.
+     - username: CharField that is optional, unique, and can be blank.
+     - bio: TextField for user biography.
+     - avatar: ImageField with a default avatar.
+     - search_vector: SearchVectorField for full-text search capabilities.
+   - Manager: UserManager for creating users and superusers.
+
+2. Topic: Represents a discussion topic.
+   - Fields:
+     - name: CharField for the topic name, indexed for faster lookups.
+
+3. Room: Represents a chat room.
+   - Fields:
+     - host: ForeignKey to the User model, can be null.
+     - topic: ForeignKey to the Topic model, can be null.
+     - name: CharField for the room name, indexed.
+     - description: TextField for room description, optional.
+     - participants: ManyToManyField to the User model for room participants.
+     - updated: DateTimeField that auto-updates on save, indexed.
+     - created: DateTimeField that auto-sets on creation, indexed.
+     - search_vector: SearchVectorField for full-text search capabilities.
+   - Meta:
+     - Ordering: Rooms are ordered by updated and created timestamps.
+     - Indexes: Indexed by name, updated, and created fields.
+
+4. Message: Represents a message in a room.
+   - Fields:
+     - user: ForeignKey to the User model.
+     - room: ForeignKey to the Room model.
+     - body: TextField for the message content.
+     - updated: DateTimeField that auto-updates on save, indexed.
+     - created: DateTimeField that auto-sets on creation, indexed.
+   - Meta:
+     - Ordering: Messages are ordered by updated and created timestamps.
+     - Indexes: Indexed by updated and created fields.
+
+Usage:
+- Use the UserManager to create users and superusers.
+- The User model can be used for authentication and user-related operations.
+- Topics can be created to categorize rooms.
+- Rooms can have multiple participants and messages.
+"""
+
 from django.db import models # type: ignore
 from django.contrib.auth.models import AbstractUser, BaseUserManager # type: ignore
 from django.contrib.postgres.fields import ArrayField # type: ignore
