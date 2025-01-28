@@ -12,6 +12,7 @@ Key Components:
 
 Static and Media Files:
 - When in DEBUG mode, the application serves static files and media files from the specified directories.
+- Uploaded images will be stored in the media folder and can be accessed via the MEDIA_URL.
 
 Usage:
 - To add new URL patterns, include them in the urlpatterns list.
@@ -30,6 +31,5 @@ urlpatterns = [
     path('api/', include('base.api.urls')),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # Serve static files
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # Serve media files
