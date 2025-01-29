@@ -1,4 +1,3 @@
-// chat.js
 const initChat = (roomId) => {
     let chatSocket;
 
@@ -41,9 +40,7 @@ const initChat = (roomId) => {
                     <div class="thread__details">${data.message}</div>
                 `;
                 const chatLog = document.querySelector('#chat-log');
-                // Insert new message at the top
                 chatLog.insertBefore(messageElement, chatLog.firstChild);
-                // Scroll to top to see new message
                 chatLog.scrollTop = 0;
 
                 // Check if the message is a video call notification
@@ -68,7 +65,6 @@ const initChat = (roomId) => {
                 'message': message
             }));
             messageInput.value = '';
-            // Optional: Scroll to top after sending
             const chatLog = document.querySelector('#chat-log');
             chatLog.scrollTop = 0;
         }
