@@ -3,6 +3,7 @@
     <h2>Users ({{ users.count }})</h2>
   </div>
   {% for user in users %}
+  {% if user.username %}
   <div class="activities__box">
     <div class="activities__boxHeader roomListRoom__header">
       <a href="{% url 'user-profile' user.id %}" class="roomListRoom__author">
@@ -17,6 +18,7 @@
       </a>
     </div>
   </div>
+  {% endif %}
   {% endfor %}
   <div style="padding: 10px 0; color: #71c6dd;">
     <div style="margin-left: 16px;">
