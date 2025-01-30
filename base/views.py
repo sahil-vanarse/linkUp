@@ -116,7 +116,7 @@ def registerPage(request):
 
 def home(request):
     """
-    Displays the home page with a list of rooms, topics, and recent messages.
+    Displays the home page with a list of rooms, topics, recent messages, and all users.
     Filters rooms based on search queries provided in the request.
     """
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -131,12 +131,14 @@ def home(request):
     room_messages = Message.objects.filter(
         Q(room__topic__name__icontains=q)
     )[:4]
+    users = User.objects.all()  # Fetch all users
 
     context = {
         'rooms': rooms,
         'topics': topics,
         'room_count': room_count,
-        'room_messages': room_messages
+        'room_messages': room_messages,
+        'users': users  # Include users in the context
     }
     return render(request, 'base/home.html', context)
 
@@ -162,12 +164,14 @@ def userProfile(request, pk):
     user = User.objects.get(id=pk)
     rooms = user.room_set.all()
     room_messages = user.message_set.all()
-    topics = Topic.objects.all()
+    # topics = Topic.objects.all()
+    users = User.objects.all()
     context = {
         'user': user,
         'rooms': rooms,
         'room_messages': room_messages,
-        'topics': topics
+        # 'topics': topics
+        'users' : users
     }
     return render(request, 'base/profile.html', context)
 
@@ -273,6 +277,14 @@ def topicsPage(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
     topics = Topic.objects.filter(name__icontains=q)
     return render(request, 'base/topics.html', {'topics': topics})
+
+def UsersPage(request):
+    """
+    Displays a list of topics based on search queries.
+    """
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    users = User.objects.filter(name__icontains=q)
+    return render(request, 'base/users.html', {'users': users})
 
 def activityPage(request):
     """
