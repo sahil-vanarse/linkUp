@@ -1,142 +1,288 @@
 class WebRTCHandler {
-    constructor(roomId) {
+    constructor(roomId, userId) {
         this.roomId = roomId;
+        this.userId = userId;
+        this.peers = {};
         this.localStream = null;
-        this.remoteStream = null;
-        this.peerConnection = null;
-        this.signalingSocket = null;
-
         this.configuration = {
             iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' }
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' }
             ]
         };
 
-        this.init();
+        this.audioEnabled = true;
+        this.videoEnabled = true;
+
+        this.initSignaling();
+        this.setupUIHandlers();
     }
 
-    async init() {
-        this.connectSignaling();
-        this.setupPeerConnection();
+    async requestMediaPermissions() {
+        try {
+            await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            });
+            return true;
+        } catch (error) {
+            console.error('Permission denied:', error);
+            return false;
+        }
     }
 
-    connectSignaling() {
-        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    initSignaling() {
         this.signalingSocket = new WebSocket(
-            `${wsProtocol}//${window.location.host}/ws/base/room/${this.roomId}/webrtc/`
+            `wss://${window.location.host}/ws/base/room/${this.roomId}/webrtc/`
         );
 
-        this.signalingSocket.onmessage = (event) => {
+        this.signalingSocket.onmessage = async (event) => {
             const data = JSON.parse(event.data);
+            
             switch (data.type) {
                 case 'offer':
-                    this.handleOffer(data);
+                    await this.handleOffer(data);
                     break;
                 case 'answer':
-                    this.handleAnswer(data);
+                    await this.handleAnswer(data);
                     break;
                 case 'ice-candidate':
-                    this.handleIceCandidate(data);
+                    await this.handleIceCandidate(data);
                     break;
-                case 'call-notification':
-                    document.getElementById('callStarter').textContent = data.username;
-                    document.getElementById('videoCallNotification').style.display = 'block';
+                case 'user-joined':
+                    await this.handleNewUser(data.userId);
+                    break;
+                case 'user-left':
+                    this.handleUserLeft(data.userId);
+                    break;
+                case 'call-request':
+                    this.showCallNotification(data.userId);
                     break;
             }
         };
     }
 
-    setupPeerConnection() {
-        this.peerConnection = new RTCPeerConnection(this.configuration);
+    async handleNewUser(userId) {
+        if (userId === this.userId) return;
 
-        this.peerConnection.onicecandidate = (event) => {
+        const peer = await this.createPeerConnection(userId);
+        const offer = await peer.createOffer();
+        await peer.setLocalDescription(offer);
+
+        this.signalingSocket.send(JSON.stringify({
+            message: {
+                type: 'offer',
+                offer: peer.localDescription,
+                target: userId
+            }
+        }));
+    }
+
+    setupUIHandlers() {
+        const videoCallBtn = document.getElementById('videoCallBtn');
+        const joinCallBtn = document.getElementById('joinVideoCallBtn');
+        const declineCallBtn = document.getElementById('declineVideoCallBtn');
+        const endCallBtn = document.getElementById('endCall');
+        const toggleAudioBtn = document.getElementById('toggleAudio');
+        const toggleVideoBtn = document.getElementById('toggleVideo');
+
+        videoCallBtn?.addEventListener('click', async () => {
+            const hasPermissions = await this.requestMediaPermissions();
+            if (hasPermissions) {
+                await this.startCall();
+                this.broadcastCallRequest();
+            } else {
+                alert('Camera and microphone permissions are required for video calls.');
+            }
+        });
+
+        joinCallBtn?.addEventListener('click', async () => {
+            const hasPermissions = await this.requestMediaPermissions();
+            if (hasPermissions) {
+                await this.joinCall();
+                document.getElementById('videoCallNotification').style.display = 'none';
+            } else {
+                alert('Camera and microphone permissions are required for video calls.');
+            }
+        });
+
+        declineCallBtn?.addEventListener('click', () => {
+            document.getElementById('videoCallNotification').style.display = 'none';
+        });
+
+        endCallBtn?.addEventListener('click', () => this.endCall());
+
+        toggleAudioBtn?.addEventListener('click', () => this.toggleAudio());
+        toggleVideoBtn?.addEventListener('click', () => this.toggleVideo());
+    }
+
+    async startCall() {
+        try {
+            this.localStream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            });
+            
+            document.getElementById('callContainer').style.display = 'block';
+            this.showLocalVideo();
+            this.setupPeerConnections();
+            
+            const toggleAudioBtn = document.getElementById('toggleAudio');
+            const toggleVideoBtn = document.getElementById('toggleVideo');
+            
+            toggleAudioBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            toggleVideoBtn.innerHTML = '<i class="fas fa-video"></i>';
+        } catch (error) {
+            console.error('Error starting call:', error);
+            alert('Failed to access camera or microphone. Please check permissions.');
+        }
+    }
+
+    broadcastCallRequest() {
+        this.signalingSocket.send(JSON.stringify({
+            message: {
+                type: 'call-request',
+                sender: this.userId
+            }
+        }));
+    }
+
+    showCallNotification(callerId) {
+        const notification = document.getElementById('videoCallNotification');
+        notification.style.display = 'block';
+    }
+
+    async createPeerConnection(userId) {
+        const peer = new RTCPeerConnection(this.configuration);
+        this.peers[userId] = peer;
+
+        this.localStream.getTracks().forEach(track => {
+            peer.addTrack(track, this.localStream);
+        });
+
+        peer.onicecandidate = (event) => {
             if (event.candidate) {
                 this.signalingSocket.send(JSON.stringify({
-                    type: 'ice-candidate',
-                    candidate: event.candidate
+                    message: {
+                        type: 'ice-candidate',
+                        candidate: event.candidate,
+                        target: userId
+                    }
                 }));
             }
         };
 
-        this.peerConnection.ontrack = (event) => {
-            const remoteVideo = document.getElementById('remoteVideo');
-            if (remoteVideo.srcObject !== event.streams[0]) {
-                remoteVideo.srcObject = event.streams[0];
-                this.remoteStream = event.streams[0];
-            }
+        peer.ontrack = (event) => {
+            const remoteStream = event.streams[0];
+            this.showRemoteVideo(userId, remoteStream);
         };
-    }
 
-    async startCall(isVideo = true) {
-        try {
-            const constraints = { audio: true, video: isVideo };
-
-            this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
-            document.getElementById('localVideo').srcObject = this.localStream;
-
-            this.localStream.getTracks().forEach(track => {
-                this.peerConnection.addTrack(track, this.localStream);
-            });
-
-            const offer = await this.peerConnection.createOffer();
-            await this.peerConnection.setLocalDescription(offer);
-
-            this.signalingSocket.send(JSON.stringify({
-                type: 'offer',
-                offer: offer
-            }));
-
-            this.signalingSocket.send(JSON.stringify({
-                type: 'start-call',
-                username: roomId // Replace with the username of the call starter
-            }));
-
-            document.getElementById('callContainer').style.display = 'block';
-        } catch (error) {
-            console.error('Error starting call:', error);
-            alert('Could not start call. Please check your camera/microphone permissions.');
-        }
+        return peer;
     }
 
     async handleOffer(data) {
-        try {
-            document.getElementById('callContainer').style.display = 'block';
+        const peer = await this.createPeerConnection(data.sender);
+        await peer.setRemoteDescription(new RTCSessionDescription(data.offer));
+        const answer = await peer.createAnswer();
+        await peer.setLocalDescription(answer);
 
-            const constraints = { audio: true, video: true };
-
-            this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
-            document.getElementById('localVideo').srcObject = this.localStream;
-
-            this.localStream.getTracks().forEach(track => {
-                this.peerConnection.addTrack(track, this.localStream);
-            });
-
-            await this.peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
-            const answer = await this.peerConnection.createAnswer();
-            await this.peerConnection.setLocalDescription(answer);
-
-            this.signalingSocket.send(JSON.stringify({
+        this.signalingSocket.send(JSON.stringify({
+            message: {
                 type: 'answer',
-                answer: answer
-            }));
-        } catch (error) {
-            console.error('Error handling offer:', error);
+                answer: answer,
+                target: data.sender
+            }
+        }));
+    }
+
+    showLocalVideo() {
+        const videoGrid = document.querySelector('.video-grid');
+        const videoContainer = document.createElement('div');
+        videoContainer.className = 'video-container';
+        videoContainer.id = `local-${this.userId}`;
+        
+        const video = document.createElement('video');
+        video.autoplay = true;
+        video.playsInline = true;
+        video.muted = true;
+        video.srcObject = this.localStream;
+        
+        const label = document.createElement('div');
+        label.className = 'video-label';
+        label.textContent = 'You';
+        
+        videoContainer.appendChild(video);
+        videoContainer.appendChild(label);
+        videoGrid.appendChild(videoContainer);
+        
+        video.play().catch(e => console.error('Error playing local video:', e));
+    }
+
+    showRemoteVideo(userId, stream) {
+        const videoGrid = document.querySelector('.video-grid');
+        const existingContainer = document.getElementById(`remote-${userId}`);
+        
+        if (!existingContainer) {
+            const videoContainer = document.createElement('div');
+            videoContainer.className = 'video-container';
+            videoContainer.id = `remote-${userId}`;
+            
+            const video = document.createElement('video');
+            video.autoplay = true;
+            video.playsInline = true;
+            video.srcObject = stream;
+            
+            const label = document.createElement('div');
+            label.className = 'video-label';
+            label.textContent = `User ${userId}`;
+            
+            videoContainer.appendChild(video);
+            videoContainer.appendChild(label);
+            videoGrid.appendChild(videoContainer);
+            
+            video.play().catch(e => console.error('Error playing remote video:', e));
         }
     }
 
-    async handleAnswer(data) {
-        try {
-            await this.peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
-        } catch (error) {
-            console.error('Error handling answer:', error);
+    toggleAudio() {
+        if (this.localStream) {
+            const audioTrack = this.localStream.getAudioTracks()[0];
+            if (audioTrack) {
+                audioTrack.enabled = !audioTrack.enabled;
+                this.audioEnabled = audioTrack.enabled;
+                
+                const toggleAudioBtn = document.getElementById('toggleAudio');
+                toggleAudioBtn.innerHTML = this.audioEnabled ? 
+                    '<i class="fas fa-microphone"></i>' : 
+                    '<i class="fas fa-microphone-slash"></i>';
+            }
         }
     }
 
-    async handleIceCandidate(data) {
-        try {
-            await this.peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
-        } catch (error) {
-            console.error('Error handling ICE candidate:', error);
+    toggleVideo() {
+        if (this.localStream) {
+            const videoTrack = this.localStream.getVideoTracks()[0];
+            if (videoTrack) {
+                videoTrack.enabled = !videoTrack.enabled;
+                this.videoEnabled = videoTrack.enabled;
+                
+                const toggleVideoBtn = document.getElementById('toggleVideo');
+                toggleVideoBtn.innerHTML = this.videoEnabled ? 
+                    '<i class="fas fa-video"></i>' : 
+                    '<i class="fas fa-video-slash"></i>';
+            }
+        }
+    }
+
+    handleUserLeft(userId) {
+        const videoElement = document.getElementById(`remote-${userId}`);
+        if (videoElement) {
+            videoElement.remove();
+        }
+        
+        if (this.peers[userId]) {
+            this.peers[userId].close();
+            delete this.peers[userId];
         }
     }
 
@@ -144,44 +290,24 @@ class WebRTCHandler {
         if (this.localStream) {
             this.localStream.getTracks().forEach(track => track.stop());
         }
-        if (this.peerConnection) {
-            this.peerConnection.close();
+
+        Object.values(this.peers).forEach(peer => {
+            if (peer) {
+                peer.close();
+            }
+        });
+        this.peers = {};
+
+        const videoGrid = document.querySelector('.video-grid');
+        while (videoGrid.firstChild) {
+            videoGrid.removeChild(videoGrid.firstChild);
         }
+
         document.getElementById('callContainer').style.display = 'none';
 
-        this.signalingSocket.send(JSON.stringify({ type: 'end-call' }));
+        this.audioEnabled = true;
+        this.videoEnabled = true;
     }
 }
 
-// Initialize WebRTC
-document.addEventListener('DOMContentLoaded', () => {
-    const webrtc = new WebRTCHandler(roomId);
-
-    document.getElementById('audioCallBtn').addEventListener('click', () => {
-        webrtc.startCall(false);
-    });
-
-    document.getElementById('videoCallBtn').addEventListener('click', () => {
-        webrtc.startCall(true);
-    });
-
-    document.getElementById('endCall').addEventListener('click', () => {
-        webrtc.endCall();
-    });
-
-    document.getElementById('toggleAudio').addEventListener('click', (e) => {
-        const audioTrack = webrtc.localStream.getAudioTracks()[0];
-        audioTrack.enabled = !audioTrack.enabled;
-        e.target.textContent = audioTrack.enabled ? 'Mute' : 'Unmute';
-    });
-
-    document.getElementById('toggleVideo').addEventListener('click', (e) => {
-        const videoTrack = webrtc.localStream.getVideoTracks()[0];
-        videoTrack.enabled = !videoTrack.enabled;
-        e.target.textContent = videoTrack.enabled ? 'Stop Video' : 'Start Video';
-    });
-
-    document.getElementById('joinVideoCallBtn').addEventListener('click', () => {
-        document.getElementById('callContainer').style.display = 'block';
-    });
-});
+export default WebRTCHandler;

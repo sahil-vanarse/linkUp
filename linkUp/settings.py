@@ -180,13 +180,13 @@ CORS_ALLOWED_ORIGINS = [
 # Jazzmin settings for the Django admin interface
 
 JAZZMIN_SETTINGS = {
-    "site_title": "LinkUp Admin",  # Title displayed in the admin site
-    "site_header": "LinkUp",  # Header displayed at the top of the admin site
-    "site_brand": "LinkUp",  # Brand name displayed in the admin site
+    "site_title": "TokneX Admin",  # Title displayed in the admin site
+    "site_header": "TokneX",  # Header displayed at the top of the admin site
+    "site_brand": "TokneX",  # Brand name displayed in the admin site
     "login_logo": "icons/admin_login_image.svg",  # Logo displayed on the login page
     "site_logo_classes": "img-circle",  # CSS classes for the site logo
-    "site_icon": "icons/favicon.ico",  # Favicon for the admin site
-    "welcome_sign": "Welcome to the LinkUp, your go-to platform for connecting and collaborating.",  # Welcome message for users
+    "site_icon": "logos/newLogo.svg",  # Favicon for the admin site
+    "welcome_sign": "Welcome to the TokneX, your go-to platform for connecting and collaborating.",  # Welcome message for users
     "copyright": "Made from ❤️ by Sahil",  # Copyright notice
     "user_avatar": "profile.photo",  # Path to user avatar image
     "topmenu_links": [  # Links displayed in the top menu
