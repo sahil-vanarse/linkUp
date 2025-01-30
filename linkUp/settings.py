@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "corsheaders",  # Middleware for handling CORS
     'channels',  # Django Channels for WebSocket support
     'whitenoise.runserver_nostatic',  # Whitenoise for serving static files
+    # 'tests',
 ]
 
 # Specify the custom user model
