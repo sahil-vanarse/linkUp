@@ -131,7 +131,7 @@ def home(request):
     room_messages = Message.objects.filter(
         Q(room__topic__name__icontains=q)
     )[:3]
-    users = User.objects.all()[:10]  # Fetch all users
+    users = User.objects.all().order_by('-id')[:10]  # Fetch the latest 10 users
 
     context = {
         'rooms': rooms,
@@ -165,7 +165,7 @@ def userProfile(request, pk):
     rooms = user.room_set.all()
     room_messages = user.message_set.all()[:3]
     # topics = Topic.objects.all()
-    users = User.objects.all()
+    users = User.objects.all().order_by('-id')[:10]
     context = {
         'user': user,
         'rooms': rooms,
@@ -283,7 +283,7 @@ def UsersPage(request):
     Displays a list of topics based on search queries.
     """
     q = request.GET.get('q') if request.GET.get('q') != None else ''
-    users = User.objects.filter(Q(name__icontains=q) | Q(username__icontains=q))
+    users = User.objects.filter(Q(name__icontains=q) | Q(username__icontains=q)).order_by('-id')[:10]
     return render(request, 'base/users.html', {'users': users})
 
 def activityPage(request):
