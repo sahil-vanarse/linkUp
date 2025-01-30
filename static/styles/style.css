@@ -573,7 +573,7 @@ a {
 
 .topics__list li a {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   margin-bottom: 3rem;
   font-weight: 500;
   color: var(--color-light-gray);
@@ -585,7 +585,12 @@ a {
   color: var(--color-main);
 }
 
+.topics__list li a .avatar {
+  margin-right: 1rem;
+}
+
 .topics__list li a span {
+  margin-left: auto;
   padding: 0.5rem 1rem;
   background-color: var(--color-dark);
   border-radius: 3px;
@@ -1163,4 +1168,18 @@ a {
   font-weight: 500;
   color: var(--color-main);
   font-weight: 1.4rem;
+}
+
+ /* // Start Generation Here */
+.footer__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--color-dark);
+  color: var(--color-light);
+  position: fixed; /* Changed to fixed */
+  bottom: 0; /* Positioning it at the bottom */
+  width: 100%; /* Ensuring it spans the full width */
 }

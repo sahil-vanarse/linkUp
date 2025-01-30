@@ -18,7 +18,7 @@
             </div>
           </div>
 
-          <div class="topics-page layout__body">
+          <div class="topics-page layout__body" style="max-height: 400px; overflow-y: auto;">
             <form class="header__search" action="" method="GET">
               <label>
                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -37,8 +37,13 @@
               </li>
               {% for user in users %}
               <li>
-                <a href="{% url 'user-profile' user.id %}" class="active">{{ user.name }} </a>
-              </li>
+                <a href="{% url 'user-profile' user.id %}" class="active" style="display: flex; align-items: center; text-decoration: none;">
+                  <div class="avatar avatar--small" style="margin-right: 8px; display: flex; align-items: center;">
+                    <img src="{{ user.avatar.url }}" alt="{{ user.name }}'s avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" />
+                  </div>
+                  <span style="margin-left: 8px;">{{ user.name }} - <span style="color: #8b8b8b;">(@{{ user.username }})</span></span>
+                </a>
+              </li>           
               {% endfor %}
             </ul>
           </div>
