@@ -38,6 +38,8 @@ from django.contrib import messages # type: ignore
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.core.mail import send_mail  # Import send_mail for sending emails
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
 
 def loginPage(request):
     """
@@ -253,22 +255,53 @@ def deleteMessage(request, pk):
         return redirect('home')
     return render(request, 'base/delete.html', {'obj': message})
 
+# @login_required(login_url='login')
+# def updateUser(request):
+#     """
+#     Allows users to update their profile information.
+#     If the request method is POST, validates the form and saves the changes.
+#     Redirects to the user's profile page after updating.
+#     """
+#     user = request.user
+#     form = UserForm(instance=user)
+
+#     if request.method == "POST":
+#         form = UserForm(request.POST, request.FILES, instance=user)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('user-profile', pk=user.id)
+#     return render(request, 'base/update-user.html', {'form': form})
+
+
 @login_required(login_url='login')
 def updateUser(request):
-    """
-    Allows users to update their profile information.
-    If the request method is POST, validates the form and saves the changes.
-    Redirects to the user's profile page after updating.
-    """
     user = request.user
     form = UserForm(instance=user)
 
     if request.method == "POST":
         form = UserForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            
+            # Handle password change if new password is provided
+            new_password = form.cleaned_data.get('new_password1')
+            if new_password:
+                user.set_password(new_password)
+            
+            user.save()
+            
+            # If password was changed, update the session
+            if new_password:
+                update_session_auth_hash(request, user)
+                messages.success(request, 'Your password was successfully updated!')
+            
+            messages.success(request, 'Profile updated successfully!')
             return redirect('user-profile', pk=user.id)
+        else:
+            messages.error(request, 'Please correct the errors below.')
+            
     return render(request, 'base/update-user.html', {'form': form})
+
 
 def topicsPage(request):
     """
@@ -292,3 +325,17 @@ def activityPage(request):
     """
     room_messages = Message.objects.all()
     return render(request, 'base/activity.html', {'room_messages': room_messages})
+
+
+@login_required(login_url='login')
+def deleteAccount(request):
+    if request.method == 'POST':
+        confirmation = request.POST.get('confirmation')
+        if confirmation == 'DELETE':
+            user = request.user
+            user.delete()
+            messages.success(request, 'Your account has been permanently deleted.')
+            return redirect('home')
+        else:
+            messages.error(request, 'Please type DELETE to confirm account deletion.')
+    return render(request, 'base/delete_account.html')

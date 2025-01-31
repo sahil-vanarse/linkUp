@@ -4,7 +4,20 @@
 
     <main class="update-account layout">
         <div class="container">
-            <div class="layout__box">
+            <div class="layout__box" style="max-height: 500px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #71c6dd #f0f0f0;">
+                <style>
+                    /* For WebKit browsers */
+                    .layout__box::-webkit-scrollbar {
+                        width: 4px;
+                    }
+                    .layout__box::-webkit-scrollbar-thumb {
+                        background-color: #2d2d39; /* Updated color */
+                        border-radius: 10px;
+                    }
+                    .layout__box::-webkit-scrollbar-track {
+                        background-color: #3f4156; /* Updated color */
+                    }
+                </style>
                 <div class="layout__boxHeader">
                     <div class="layout__boxTitle">
                         <a href="{% url 'home' %}">
@@ -47,6 +60,32 @@
                             <label for="bio">Bio</label>
                             {{ form.bio }}
                         </div>
+
+                        <div class="form__group">
+                            <label for="old_password">Current Password (only if changing password)</label>
+                            {{ form.old_password }}
+                        </div>
+
+                        <div class="form__group" style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1; margin-right: 10px;">
+                                <label for="new_password1">New Password</label>
+                                {{ form.new_password1 }}
+                            </div>
+                            <div style="flex: 1;">
+                                <label for="new_password2">Confirm New Password</label>
+                                {{ form.new_password2 }}
+                            </div>
+                        </div>
+
+                        {% if form.errors %}
+                        <div class="form__group">
+                            <ul class="errorlist">
+                                {% for error in form.non_field_errors %}
+                                    <li style="color: red;">{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
 
                         <div class="form__action">
                             <a class="btn btn--dark" href="{% url 'home' %}">Cancel</a>

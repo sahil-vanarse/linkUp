@@ -3,8 +3,21 @@
 {% block content %}
     <main class="layout">
       <div class="container">
-        <div class="layout__box">
-          <div class="layout__boxHeader">
+        <div class="layout__box" style="max-height: 400px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #71c6dd #f0f0f0;">
+          <style>
+            /* For WebKit browsers */
+            .layout__box::-webkit-scrollbar {
+                width: 4px;
+            }
+            .layout__box::-webkit-scrollbar-thumb {
+                background-color: #2d2d39; /* Updated color */
+                border-radius: 10px;
+            }
+            .layout__box::-webkit-scrollbar-track {
+                background-color: #3f4156; /* Updated color */
+            }
+          </style>
+          <div class="layout__boxHeader" style="position: sticky; top: 0; width: 100%; z-index: 1">
             <div class="layout__boxTitle">
               <a href="{% url 'home' %}">
                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -18,12 +31,12 @@
             </div>
           </div>
 
-          <div class="activities-page layout__body" style="max-height: 400px; overflow-y: auto;">
+          <div class="activities-page layout__body">
             {% for message in room_messages %}
               <div class="activities__box">
                 <div class="activities__boxHeader roomListRoom__header">
                   <a href="{% url 'user-profile' message.user.id %}" class="roomListRoom__author">
-                    <div class="avatar avatar--small">
+                    <div style="width: 2.8rem; height: 2.8rem; border-radius: 50%; overflow: hidden;">
                       <img src="{{message.user.avatar.url}}" />
                     </div>
                     <p>
@@ -47,7 +60,7 @@
                   {% endif %}
                 </div>
                 <div class="activities__boxContent">
-                  <p>replied to post “<a href="{% url 'room' message.room.id%}">{{message.room}}</a>”</p>
+                  <p>replied to post "<a href="{% url 'room' message.room.id%}">{{message.room}}</a>"</p>
                   <div class="activities__boxRoomContent">
                     {{message.body}}
                   </div>

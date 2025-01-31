@@ -19,6 +19,19 @@
           </div>
 
           <div class="topics-page layout__body" style="max-height: 400px; overflow-y: auto;">
+            <style>
+                    /* For WebKit browsers */
+                    .layout__box::-webkit-scrollbar {
+                        width: 4px;
+                    }
+                    .layout__box::-webkit-scrollbar-thumb {
+                        background-color: #2d2d39; /* Updated color */
+                        border-radius: 10px;
+                    }
+                    .layout__box::-webkit-scrollbar-track {
+                        background-color: #3f4156; /* Updated color */
+                    }
+            </style>
             <form class="header__search" action="" method="GET">
               <label>
                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
