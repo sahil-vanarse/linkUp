@@ -47,6 +47,7 @@ def loginPage(request):
     If the request method is POST, it attempts to authenticate the user with the provided email and password.
     Displays an error message if authentication fails.
     """
+    error = None
     page = 'login'
     if request.user.is_authenticated:
         return redirect('home')
@@ -66,7 +67,7 @@ def loginPage(request):
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, 'Username or Password does not exist')
+            error = messages.error(request, 'Username or Password does not exist')
 
     context = {'page': page}
     return render(request, 'base/login_register.html', context)
@@ -82,6 +83,7 @@ def registerPage(request):
     If valid, creates a new user and logs them in, redirecting to the home page.
     Displays an error message if registration fails.
     """
+    error = None
     form = MyUserCreationForm()
     if request.method == 'POST':
         form = MyUserCreationForm(request.POST)
@@ -106,14 +108,14 @@ def registerPage(request):
             send_mail(
                 'Welcome to LinkUp!',
                 welcome_message,
-                'sahilvanarse4@gmail.com',  # Replace with your from email
+                'sahilvanarse13@gmail.com',  # Replace with your from email
                 [user.email],
                 fail_silently=False,
             )
 
             return redirect('home')
         else:
-            messages.error(request, 'An error occurred during registration')
+            error = messages.error(request, 'An error occurred during registration')
     return render(request, 'base/login_register.html', {'form': form})
 
 def home(request):
@@ -278,6 +280,8 @@ def updateUser(request):
     user = request.user
     form = UserForm(instance=user)
 
+    error = None
+
     if request.method == "POST":
         form = UserForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
@@ -298,7 +302,7 @@ def updateUser(request):
             messages.success(request, 'Profile updated successfully!')
             return redirect('user-profile', pk=user.id)
         else:
-            messages.error(request, 'Please correct the errors below.')
+            error = messages.error(request, 'Please correct the errors below.')
             
     return render(request, 'base/update-user.html', {'form': form})
 
@@ -329,6 +333,7 @@ def activityPage(request):
 
 @login_required(login_url='login')
 def deleteAccount(request):
+    error = None
     if request.method == 'POST':
         confirmation = request.POST.get('confirmation')
         if confirmation == 'DELETE':
@@ -337,5 +342,21 @@ def deleteAccount(request):
             messages.success(request, 'Your account has been permanently deleted.')
             return redirect('home')
         else:
-            messages.error(request, 'Please type DELETE to confirm account deletion.')
+            error = messages.error(request, 'Please type DELETE to confirm account deletion.')
     return render(request, 'base/delete_account.html')
+
+
+@login_required(login_url='login')
+def videocall(request, room_id):
+    try:
+        room = Room.objects.get(id=room_id)  # Check if the room exists
+    except Room.DoesNotExist:
+        return render(request, 'base/404.html')  # Render a 404 page if the room does not exist
+
+    context = {
+        'user_id': request.user.id,
+        'username': request.user.username,
+        'room_id': room_id,
+        'room_name': room.name,  # Pass the room name if needed
+    }
+    return render(request, 'base/videocall.html', context)
