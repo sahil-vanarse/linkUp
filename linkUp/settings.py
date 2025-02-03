@@ -16,7 +16,6 @@ Key Sections:
 - AUTH_PASSWORD_VALIDATORS: Validators for user passwords.
 - STATIC and MEDIA files configuration: Settings for serving static and media files.
 - CORS configuration: Settings for Cross-Origin Resource Sharing.
-
 """
 
 from pathlib import Path
@@ -36,7 +35,7 @@ SECRET_KEY = 'django-insecure-8xh327^ve7&+t*dj6&5sxop3)^g)$db_oo0nu$w)e0w2uj6&kw
 DEBUG = True
 
 # Define the allowed hosts for the application
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*']
+ALLOWED_HOSTS = []
 
 # Application definition: List of installed applications
 INSTALLED_APPS = [
@@ -53,7 +52,6 @@ INSTALLED_APPS = [
     "corsheaders",  # Middleware for handling CORS
     'channels',  # Django Channels for WebSocket support
     'whitenoise.runserver_nostatic',  # Whitenoise for serving static files
-    # 'tests',
 ]
 
 # Specify the custom user model
@@ -109,7 +107,7 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL database engine
-        'NAME': 'linkUp',  # Database name
+        'NAME': 'TokneX',  # Database name
         'USER': 'postgres',  # Database user
         'PASSWORD': 'S#@5ahil1P',  # Database password
         'HOST': 'localhost',  # Database host
@@ -124,7 +122,7 @@ EMAIL_PORT = 465  # SSL port
 EMAIL_USE_SSL = True  # SSL must be True for port 465
 EMAIL_HOST_USER = 'sahilvanarse4@gmail.com'
 EMAIL_HOST_PASSWORD = 'pujz jwvv zglo vlhr'  # Ensure it's correct and no extra spaces
-DEFAULT_FROM_EMAIL = 'sahilvanarse4@gmail.com'  # Default from email address
+DEFAULT_FROM_EMAIL = 'sahilvanarse4@gmail.com'
 
 # Password validation settings
 AUTH_PASSWORD_VALIDATORS = [
@@ -177,9 +175,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
 
-
 # Jazzmin settings for the Django admin interface
-
 JAZZMIN_SETTINGS = {
     "site_title": "TokneX Admin",  # Title displayed in the admin site
     "site_header": "TokneX",  # Header displayed at the top of the admin site

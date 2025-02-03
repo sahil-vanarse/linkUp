@@ -60,6 +60,7 @@
               </div>
               <div class="room__header-controls" style="display: flex; align-items: center;">
                 <span class="room__topics">{{room.topic}}</span>
+                {% if room.host == request.user %}
                 <a href="{% url 'meetings' room.id %}" class="btn btn--main" style="margin-left: 10px; height: 32px; display: flex; align-items: center;">
                   <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -72,6 +73,7 @@
                       <path d="M15 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h10c.55 0 1-.45 1-1v-3.5l4 3.5V7l-4 3.5z"/>
                   </svg>
                 </a>
+                {% endif %}
               </div>
             </div>
             <div class="room__conversation">
@@ -103,6 +105,7 @@
                   <div class="thread__details">
                     {{message.body}}
                   </div>
+                  
                 </div>
                 {% endfor %}
               </div>

@@ -39,7 +39,6 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.core.mail import send_mail  # Import send_mail for sending emails
 from django.contrib.auth import update_session_auth_hash
-from django.contrib import messages
 
 def loginPage(request):
     """
@@ -150,7 +149,11 @@ def room(request, pk):
     """
     Displays a specific room's details, including messages and participants.
     """
-    room = Room.objects.get(id=pk)
+    try:
+        room = Room.objects.get(id=pk)
+    except Room.DoesNotExist:
+        return render(request, 'base/404.html')  # Render a 404 page if the room does not exist
+
     room_messages = room.message_set.all().order_by('-created')
     participants = room.participants.all()
 
@@ -338,8 +341,12 @@ def deleteAccount(request):
         confirmation = request.POST.get('confirmation')
         if confirmation == 'DELETE':
             user = request.user
+            
+            # Delete all rooms associated with the user
+            user.room_set.all().delete()
+            
             user.delete()
-            messages.success(request, 'Your account has been permanently deleted.')
+            messages.success(request, 'Your account and all associated rooms have been permanently deleted.')
             return redirect('home')
         else:
             error = messages.error(request, 'Please type DELETE to confirm account deletion.')

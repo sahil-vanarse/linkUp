@@ -1,7 +1,3 @@
-# This file configures the ASGI application for the Django project.
-# It sets up the necessary environment variables and initializes Django.
-# The application supports both HTTP and WebSocket protocols.
-
 import os
 import django
 

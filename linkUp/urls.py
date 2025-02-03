@@ -17,7 +17,6 @@ Static and Media Files:
 Usage:
 - To add new URL patterns, include them in the urlpatterns list.
 - Ensure to import any necessary views or modules at the top of this file.
-
 """
 
 from django.contrib import admin  # type: ignore 
