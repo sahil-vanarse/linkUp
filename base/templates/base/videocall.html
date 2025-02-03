@@ -1,0 +1,43 @@
+{% extends 'main.html' %}
+
+{% block content %}
+  <div id="videoCallContainer" style="text-align: center; padding: 20px; max-width: 1200px; margin: auto;">
+    <h1 style="font-size: 1.2em; color: #4A90E2;">Join the Video Call for Room: <span style="font-weight: bold; color: white;">{{ room_name }}</span></h1>
+    <div id="root" style="width: 100%; height: 80vh; max-height: 800px; overflow: hidden;"></div> <!-- This is where the video call will be rendered -->
+    <button onclick="window.location.href='{% url 'room' room_id %}'" style="margin-top: 20px; padding: 10px 20px; font-size: 1em; background-color: #4A90E2; color: white; border: none; border-radius: 5px; cursor: pointer;">Back to Room</button>
+    <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+    <script>
+      window.onload = function () {
+        const roomId = "{{ room_id }}"; // Use the room ID in your JavaScript
+        const userID = "{{ user_id }}"; // Ensure user_id is treated as a string
+        const userName = "{{ username }}";
+        const appID = 280649224;
+        const serverSecret = "b64abf7a9d0385fc486ede45d03a9961";
+        const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomId, userID, userName);
+
+        const zp = ZegoUIKitPrebuilt.create(kitToken);
+        zp.joinRoom({
+          container: document.querySelector("#root"),
+          sharedLinks: [{
+            name: 'Personal link',
+            url: window.location.protocol + '//' + window.location.host + window.location.pathname + '?roomID=' + roomId,
+          }],
+          scenario: {
+            mode: ZegoUIKitPrebuilt.VideoConference,
+          },
+          turnOnMicrophoneWhenJoining: true,
+          turnOnCameraWhenJoining: true,
+          showMyCameraToggleButton: true,
+          showMyMicrophoneToggleButton: true,
+          showAudioVideoSettingsButton: true,
+          showScreenSharingButton: true,
+          showTextChat: true,
+          showUserList: true,
+          maxUsers: 50,
+          layout: "Grid",
+          showLayoutButton: true,
+        });
+      }
+    </script>
+  </div>
+{% endblock content %}

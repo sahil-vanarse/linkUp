@@ -360,3 +360,4 @@ def videocall(request, room_id):
         'room_name': room.name,  # Pass the room name if needed
     }
     return render(request, 'base/videocall.html', context)
+
