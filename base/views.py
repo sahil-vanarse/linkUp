@@ -95,19 +95,19 @@ def registerPage(request):
             # Send a welcome email to the user
             welcome_message = (
                 f"Dear {user.username.upper()},\n\n"
-                "We're thrilled to welcome you to the LinkUp family! 🎉\n\n"
+                "We're thrilled to welcome you to the TokneX family! 🎉\n\n"
                 "Thank you for registering with us. At LinkUp, we believe in creating meaningful connections and empowering individuals to share knowledge, collaborate, and grow together. We are so glad to have you on board.\n\n"
                 "We look forward to helping you explore new opportunities, meet like-minded individuals, and build lasting relationships in our vibrant community.\n\n"
                 "If you have any questions or need assistance, feel free to reach out to us. We're here for you every step of the way!\n\n"
                 "Welcome aboard, and let's make this journey unforgettable! 🚀\n\n"
                 "Best regards,\n"
-                "The LinkUp Team"
+                "The TokneX Team"
             )
 
             send_mail(
                 'Welcome to LinkUp!',
                 welcome_message,
-                'sahilvanarse13@gmail.com',  # Replace with your from email
+                'sahilvanarse4@gmail.com',  # Replace with your from email
                 [user.email],
                 fail_silently=False,
             )
@@ -260,23 +260,6 @@ def deleteMessage(request, pk):
         return redirect('home')
     return render(request, 'base/delete.html', {'obj': message})
 
-# @login_required(login_url='login')
-# def updateUser(request):
-#     """
-#     Allows users to update their profile information.
-#     If the request method is POST, validates the form and saves the changes.
-#     Redirects to the user's profile page after updating.
-#     """
-#     user = request.user
-#     form = UserForm(instance=user)
-
-#     if request.method == "POST":
-#         form = UserForm(request.POST, request.FILES, instance=user)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('user-profile', pk=user.id)
-#     return render(request, 'base/update-user.html', {'form': form})
-
 
 @login_required(login_url='login')
 def updateUser(request):
@@ -367,4 +350,3 @@ def videocall(request, room_id):
         'room_name': room.name,  # Pass the room name if needed
     }
     return render(request, 'base/videocall.html', context)
-
