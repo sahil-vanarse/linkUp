@@ -96,7 +96,7 @@ def registerPage(request):
             welcome_message = (
                 f"Dear {user.username.upper()},\n\n"
                 "We're thrilled to welcome you to the TokneX family! 🎉\n\n"
-                "Thank you for registering with us. At LinkUp, we believe in creating meaningful connections and empowering individuals to share knowledge, collaborate, and grow together. We are so glad to have you on board.\n\n"
+                "Thank you for registering with us. At Toknex, we believe in creating meaningful connections and empowering individuals to share knowledge, collaborate, and grow together. We are so glad to have you on board.\n\n"
                 "We look forward to helping you explore new opportunities, meet like-minded individuals, and build lasting relationships in our vibrant community.\n\n"
                 "If you have any questions or need assistance, feel free to reach out to us. We're here for you every step of the way!\n\n"
                 "Welcome aboard, and let's make this journey unforgettable! 🚀\n\n"
@@ -105,7 +105,7 @@ def registerPage(request):
             )
 
             send_mail(
-                'Welcome to LinkUp!',
+                'Welcome to TokneX!',
                 welcome_message,
                 'sahilvanarse4@gmail.com',  # Replace with your from email
                 [user.email],
