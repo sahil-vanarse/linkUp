@@ -210,6 +210,36 @@
         .room__box {
           margin-bottom: 85px; /* Add space for fixed input */
         }
+        .dropdown-content {
+          position: absolute;
+          right: 0;
+          min-width: 150px !important; /* Force minimum width */
+          z-index: 1000;
+          background: var(--color-dark);
+          border-radius: 5px;
+          overflow: visible;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    
+        .dropdown-content a {
+          padding: 12px 16px;
+          display: block;
+          width: 100%;
+          white-space: nowrap; /* Prevent text wrapping */
+          color: var(--color-light);
+        }
+    
+        /* Ensure dropdown is above other elements */
+        .header__menu {
+          position: relative;
+          z-index: 1001;
+        }
+    
+        /* Adjust avatar position if needed */
+        .avatar.avatar--medium {
+          margin-right: 10px;
+        }
+      
       }
     </style>
 {% endblock %}
