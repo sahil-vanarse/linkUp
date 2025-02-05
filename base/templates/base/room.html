@@ -47,7 +47,7 @@
             <div class="room__header scroll">
               <div class="room__info">
                 <h3>{{room.description}}</h3>
-                <span>{{room.created|timesince}} ago</span>
+                {% comment %} <span>{{room.created|timesince}} ago</span> {% endcomment %}
               </div>
               <div class="room__hosted">
                 <p>Hosted By</p>
@@ -134,7 +134,7 @@
                 required 
                 style="flex: 1; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"
               />
-              <button style="margin-bottom: 10px; margin-right: 10px;" type="submit" class="btn btn--main">
+              <button style="margin-bottom: 10px;" type="submit" class="btn btn--main">
                 Send
               </button>
             </form>
