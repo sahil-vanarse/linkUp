@@ -114,7 +114,15 @@ def registerPage(request):
 
             return redirect('home')
         else:
-            error = messages.error(request, 'An error occurred during registration')
+            # error = messages.error(request, 'An error occurred during registration')
+            if 'username' in form.errors:
+                messages.error(request, 'Username already exists')
+            elif 'email' in form.errors:
+                messages.error(request, 'Email already exists')
+            elif 'password2' in form.errors:
+                messages.error(request, 'Passwords does not match')
+            else:
+                messages.error(request, 'An error occurred during registration')
     return render(request, 'base/login_register.html', {'form': form})
 
 def home(request):
