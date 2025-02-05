@@ -1233,3 +1233,61 @@ a {
     z-index: 1001;
   }
 }
+
+.error-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-content {
+  text-align: center;
+  padding: 2rem;
+}
+
+.error-content h2 {
+  font-size: 3.5rem;
+  color: var(--color-light);
+  margin-bottom: 1rem;
+}
+
+.error-content p {
+  color: var(--color-light-gray);
+  margin-bottom: 3rem;
+  margin-top: -1rem;
+}
+
+
+.btn-bounce:hover {
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}

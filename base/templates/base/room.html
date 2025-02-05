@@ -109,11 +109,9 @@
                     {% endif %}
                   </div>
                   <div class="thread__details">
-                    {% comment %} {{message.body}} {% endcomment %}
                     {% autoescape off %}
                     {{ message.body|urlize|safe }}
                     {% endautoescape %}
-
                   </div>
                   
                 </div>
