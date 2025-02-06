@@ -1170,6 +1170,12 @@ a {
   font-weight: 1.4rem;
 }
 
+.user-username {
+  color: #8b8b8b;
+  font-size: 0.85em;
+  font-weight: normal;
+}
+
 
 @media screen and (max-width: 48rem) {
   .room__message {
@@ -1206,7 +1212,7 @@ a {
   }
 
   .room__box {
-    margin-bottom: 5.3125rem; /* 85px to rem */
+    margin-bottom: 5.3125rem; 
   }
 
   .dropdown-content {
@@ -1232,6 +1238,10 @@ a {
     position: relative;
     z-index: 1001;
   }
+}
+
+.user-username {
+  font-size: 0.75em;
 }
 
 .error-page {
