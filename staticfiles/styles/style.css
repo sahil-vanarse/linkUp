@@ -1178,10 +1178,13 @@ a {
 
 
 @media screen and (max-width: 48rem) {
+  .threads{
+    margin-top: 23vh;
+  }
   .room__message {
     position: fixed;
-    bottom: 22px;
-    left: 6px;
+    bottom: 3rem;
+    left: 0.75rem;
     right: 0;
     background: var(--color-dark);
     padding: 1rem;
@@ -1207,7 +1210,7 @@ a {
 
   .room__message button {
     margin: 0;
-    height: 4.3rem;
+    height: 3.7rem;
     padding: 0 0.625rem;
   }
 
