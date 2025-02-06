@@ -76,9 +76,11 @@
                 {% endif %}
 
                 {% if room.host != request.user %}
+                {% if request.user.is_authenticated %}
                 <a href="{% url 'meetings' room.id %}?roomID={{ room.id }}" class="btn btn--main" style="margin-left: 10px; height: 30px; display: flex; align-items: center;">
                   Join Video Call 
                 </a>
+                {% endif %}
                 {% endif %}
               </div>
             </div>
