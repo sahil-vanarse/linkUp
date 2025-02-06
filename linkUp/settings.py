@@ -192,5 +192,5 @@ JAZZMIN_SETTINGS = {
         {"model": "auth.User"},  # Link to the User model
         {"app": "base"},  # Link to the base app
     ],
-    "show_ui_builder": True,  # Enable UI builder for customization
+    "show_ui_builder": False,  # Enable UI builder for customization
 }
