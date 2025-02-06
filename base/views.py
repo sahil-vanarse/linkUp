@@ -261,11 +261,12 @@ def deleteMessage(request, pk):
     If the request method is POST, deletes the message and redirects to the home page.
     """
     message = Message.objects.get(id=pk)
+    room_id = message.room.id
     if request.user != message.user:
         return HttpResponse('You are not Allowed!!!')
     if request.method == "POST":
         message.delete()
-        return redirect('home')
+        return redirect('room', pk=room_id)
     return render(request, 'base/delete.html', {'obj': message})
 
 
