@@ -60,8 +60,7 @@ Images :
 ![043d9ba3b55b4abc83e33e4923402efe](https://github.com/user-attachments/assets/cadb47d3-3c3b-4d67-9cc9-7f7d207c35b4)
 
 
-
-📥 Installation![Uploading e1196630085d46989f20deaedeaca561.jpg…]()
+📥 Installation!
 
 # Clone the repository
 git clone https://github.com/sahil-vanarse/linkup.git
