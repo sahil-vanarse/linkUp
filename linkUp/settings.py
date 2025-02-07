@@ -120,6 +120,12 @@ CHANNEL_LAYERS = {
 #     }
 # }
 
+
+# Add image format settings
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png']  # Changes made here
+
+
 # Database configuration
 DATABASES = {
     'default': dj_database_url.parse('postgresql://toknex_user:9aM3rqYSn40M8hQaHxjEna5G81xY1bxB@dpg-cuj5jdbv2p9s73cic1eg-a.oregon-postgres.render.com/toknex')

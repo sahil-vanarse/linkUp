@@ -35,9 +35,12 @@ Usage:
 - These forms can be used in views to handle user registration and room creation.
 - Ensure that the fields align with the User and Room models defined in the application.
 """
-
+from PIL import Image
+from io import BytesIO
+import sys
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django import forms
-from django.forms import ModelForm # type: ignore
+from django.forms import ModelForm, ValidationError # type: ignore
 from .models import Room, User
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm # type: ignore
 from django.contrib.auth import password_validation
@@ -91,3 +94,35 @@ class UserForm(ModelForm):
             raise forms.ValidationError("Current password is incorrect")
 
         return cleaned_data
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get('avatar')
+        if avatar:
+            # Validate file extension
+            valid_extensions = ['jpg', 'jpeg', 'png']
+            ext = avatar.name.split('.')[-1].lower()
+            if ext not in valid_extensions:
+                raise ValidationError('Only JPG, JPEG, and PNG files are allowed.')
+
+            # Process image
+            img = Image.open(avatar)
+            
+            # Convert to RGB if necessary
+            if img.mode in ('RGBA', 'P'):
+                img = img.convert('RGB')
+            
+            # Process and save as JPEG
+            output = BytesIO()
+            img.save(output, format='JPEG', quality=85)
+            output.seek(0)
+            
+            # Return processed image
+            return InMemoryUploadedFile(
+                output,
+                'ImageField',
+                f"{avatar.name.split('.')[0]}.jpg",
+                'image/jpeg',
+                sys.getsizeof(output),
+                None
+            )
+        return avatar
