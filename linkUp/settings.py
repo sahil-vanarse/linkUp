@@ -39,6 +39,9 @@ DEBUG = True
 # Define the allowed hosts for the application
 ALLOWED_HOSTS = ['*', 'https://toknex.onrender.com', 'toknex.onrender.com']
 
+CSRF_TRUSTED_ORIGINS = ["https://your-app.onrender.com"]
+
+
 # Application definition: List of installed applications
 INSTALLED_APPS = [
     'jazzmin',
@@ -201,3 +204,6 @@ JAZZMIN_SETTINGS = {
     ],
     "show_ui_builder": False,  # Enable UI builder for customization
 }
+
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
