@@ -107,10 +107,10 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL database engine
-        'NAME': 'TokneX',  # Database name
-        'USER': 'postgres',  # Database user
-        'PASSWORD': 'S#@5ahil1P',  # Database password
-        'HOST': 'localhost',  # Database host
+        'NAME': 'toknex',  # Database name
+        'USER': 'mysuperuser',  # Database user
+        'PASSWORD': 'happyone111',  # Database password
+        'HOST': 'toknex.cf8uema8s98a.ap-south-1.rds.amazonaws.com',  # Database host
         'PORT': '5432',  # Database port
     }
 }
