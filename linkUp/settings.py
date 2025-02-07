@@ -109,8 +109,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL database engine
         'NAME': 'toknex',  # Database name
         'USER': 'mysuperuser',  # Database user
-        'PASSWORD': 'happyone111',  # Database password
-        'HOST': 'toknex.cf8uema8s98a.ap-south-1.rds.amazonaws.com',  # Database host
+        'PASSWORD': 'mysuperuser',  # Database password
+        'HOST': 'toknex.cjg0806oc94i.us-east-1.rds.amazonaws.com',  # Database host
         'PORT': '5432',  # Database port
     }
 }
