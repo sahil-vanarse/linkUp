@@ -20,6 +20,8 @@ Key Sections:
 
 from pathlib import Path
 import mimetypes
+import dj_database_url
+
 
 # Add MIME types for SVG files to ensure they are served correctly
 mimetypes.add_type("image/svg+xml", ".svg", True)
@@ -104,15 +106,20 @@ CHANNEL_LAYERS = {
 }
 
 # Database configuration
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL database engine
+#         'NAME': 'toknex',  # Database name
+#         'USER': 'postgres',  # Database user
+#         'PASSWORD': 'S#@5ahil1P',  # Database password
+#         'HOST': 'localhost',  # Database host
+#         'PORT': '5432',  # Database port
+#     }
+# }
+
+# Database configuration
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL database engine
-        'NAME': 'toknex',  # Database name
-        'USER': 'postgres',  # Database user
-        'PASSWORD': 'S#@5ahil1P',  # Database password
-        'HOST': 'localhost',  # Database host
-        'PORT': '5432',  # Database port
-    }
+    'default': dj_database_url.parse('postgresql://toknex_user:9aM3rqYSn40M8hQaHxjEna5G81xY1bxB@dpg-cuj5jdbv2p9s73cic1eg-a.oregon-postgres.render.com/toknex')
 }
 
 # Email configuration
