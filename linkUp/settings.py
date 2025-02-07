@@ -121,10 +121,6 @@ CHANNEL_LAYERS = {
 # }
 
 
-# Add image format settings
-FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
-ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png']  # Changes made here
-
 
 # Database configuration
 DATABASES = {

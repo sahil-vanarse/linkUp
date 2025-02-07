@@ -48,14 +48,10 @@ Usage:
 - Rooms can have multiple participants and messages.
 """
 
-from io import BytesIO
 from django.db import models # type: ignore
 from django.contrib.auth.models import AbstractUser, BaseUserManager # type: ignore
 from django.contrib.postgres.fields import ArrayField # type: ignore
-from django.contrib.postgres.search import SearchVectorField # type: ignore # 
-from PIL import Image
-from django.core.files.uploadedfile import InMemoryUploadedFile
-import sys 
+from django.contrib.postgres.search import SearchVectorField # type: ignore # type: ignore  
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -99,32 +95,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-
-    def save(self, *args, **kwargs):
-        if self.avatar:
-            # Open the uploaded image
-            img = Image.open(self.avatar)
-            
-            # Convert to RGB if necessary
-            if img.mode in ('RGBA', 'P'):
-                img = img.convert('RGB')
-            
-            # Process and save as JPEG
-            output = BytesIO()
-            img.save(output, format='JPEG', quality=85)
-            output.seek(0)
-            
-            # Update the ImageField
-            self.avatar = InMemoryUploadedFile(
-                output,
-                'ImageField',
-                f"{self.avatar.name.split('.')[0]}.jpg",
-                'image/jpeg',
-                sys.getsizeof(output),
-                None
-            )
-            
-        super().save(*args, **kwargs)
 
 
 
