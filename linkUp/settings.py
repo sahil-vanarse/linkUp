@@ -108,9 +108,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL database engine
         'NAME': 'toknex',  # Database name
-        'USER': 'mysuperuser',  # Database user
-        'PASSWORD': 'mysuperuser',  # Database password
-        'HOST': 'toknex.cjg0806oc94i.us-east-1.rds.amazonaws.com',  # Database host
+        'USER': 'postgres',  # Database user
+        'PASSWORD': 'S#@5ahil1P',  # Database password
+        'HOST': 'localhost',  # Database host
         'PORT': '5432',  # Database port
     }
 }
@@ -185,7 +185,7 @@ JAZZMIN_SETTINGS = {
     "site_icon": "logos/newLogo.svg",  # Favicon for the admin site
     "welcome_sign": "Welcome to the TokneX, your go-to platform for connecting and collaborating.",  # Welcome message for users
     "copyright": "Made from ❤️ by Sahil",  # Copyright notice
-    "user_avatar": "profile.photo",  # Path to user avatar image
+    # "user_avatar": "profile.photo",  # Path to user avatar image
     "topmenu_links": [  # Links displayed in the top menu
         {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},  # Link to the dashboard with permissions
         {"name": "GitHub", "url": 'https://github.com/sahil-vanarse/linkUp', "new_window": True},  # Link to GitHub repository
