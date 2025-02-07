@@ -128,7 +128,7 @@ ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png']  # Changes made here
 
 # Database configuration
 DATABASES = {
-    'default': dj_database_url.parse('postgresql://toknex_user:9aM3rqYSn40M8hQaHxjEna5G81xY1bxB@dpg-cuj5jdbv2p9s73cic1eg-a.oregon-postgres.render.com/toknex')
+    'default': dj_database_url.parse('postgresql://toknex_q3r4_user:1z0FaTzaG0GurFOwRDhTziLfA6nPBzEc@dpg-cuj8ghrqf0us73d5vtng-a.oregon-postgres.render.com/toknex_q3r4')
 }
 
 # Email configuration
