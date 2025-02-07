@@ -37,7 +37,7 @@ SECRET_KEY = 'django-insecure-8xh327^ve7&+t*dj6&5sxop3)^g)$db_oo0nu$w)e0w2uj6&kw
 DEBUG = True
 
 # Define the allowed hosts for the application
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'https://toknex.onrender.com', 'toknex.onrender.com']
 
 # Application definition: List of installed applications
 INSTALLED_APPS = [
