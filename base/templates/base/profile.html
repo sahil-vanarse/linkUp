@@ -12,7 +12,8 @@
         <div class="profile">
           <div class="profile__avatar">
             <div class="avatar avatar--large active">
-              <img src="{{user.avatar.url}}" />
+              {% comment %} <img src="{{user.avatar.url}}" /> {% endcomment %}
+              <img src="{{ user.get_avatar_url }}" alt="{{ user.username }}'s avatar">
             </div>
           </div>
           <div class="profile__info">
