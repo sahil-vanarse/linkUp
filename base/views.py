@@ -354,7 +354,7 @@ def UsersPage(request):
     Displays a list of topics based on search queries.
     """
     q = request.GET.get('q') if request.GET.get('q') != None else ''
-    users = User.objects.filter(Q(name__icontains=q) | Q(username__icontains=q)).order_by('-id')[:10]
+    users = User.objects.filter(Q(name__icontains=q) | Q(username__icontains=q)).order_by('-id')
     return render(request, 'base/users.html', {'users': users})
 
 def activityPage(request):
