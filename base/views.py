@@ -142,6 +142,7 @@ def home(request):
     room_messages = Message.objects.filter(
         Q(room__topic__name__icontains=q)
     )[:3]
+    users_count = User.objects.all().count()
     users = User.objects.all().order_by('-id')[:10]  # Fetch the latest 10 users
 
     context = {
@@ -149,7 +150,8 @@ def home(request):
         'topics': topics,
         'room_count': room_count,
         'room_messages': room_messages,
-        'users': users  # Include users in the context
+        'users': users,  # Include users in the context
+        'users_count': users_count
     }
     return render(request, 'base/home.html', context)
 
