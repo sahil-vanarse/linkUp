@@ -161,15 +161,6 @@ USE_I18N = True  # Enable internationalization
 USE_TZ = True  # Enable timezone support
 
 
-# Add these settings for Cloudinary
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'ddc6oeww0',
-    'API_KEY': '239177631986154',
-    'API_SECRET': 'XIFNsNP7ts9i3sDf5sHKWiDgO5s'
-}
-
-
-
 # Static files configuration
 STATIC_URL = '/static/'  # URL for static files
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Directory for collected static files
@@ -181,10 +172,20 @@ STATICFILES_DIRS = [
 # Media files configuration
 MEDIA_URL = '/media/'  # URL for media files
 MEDIA_ROOT = BASE_DIR / 'media'  # Directory for uploaded media files
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Whitenoise configuration for serving static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+# Add these settings for Cloudinary
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'ddc6oeww0',
+    'API_KEY': '239177631986154',
+    'API_SECRET': 'XIFNsNP7ts9i3sDf5sHKWiDgO5s',
+    'MEDIA_TAG': 'media',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
