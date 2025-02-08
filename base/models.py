@@ -101,7 +101,7 @@ class User(AbstractUser):
     def get_avatar_url(self):
         if self.avatar and hasattr(self.avatar, 'url'):
             return self.avatar.url
-        return 'path/to/default/avatar.svg'  # Replace with your default avatar path
+        return 'media/avatar.svg'  # Replace with your default avatar path
 
 
 
