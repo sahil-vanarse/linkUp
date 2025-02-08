@@ -150,7 +150,7 @@
             {% for user in participants %}
             <a href="{% url 'user-profile' user.id %}" class="participant">
               <div class="avatar avatar--medium">
-                <img src="{{user.avatar.url}}" alt="User avatar" />
+                <img src="{{user.get_avatar_url}}" alt="User avatar" />
               </div>
               <p>
                 {{user.name|capfirst}}
