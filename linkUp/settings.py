@@ -160,6 +160,16 @@ TIME_ZONE = 'UTC'  # Default time zone
 USE_I18N = True  # Enable internationalization
 USE_TZ = True  # Enable timezone support
 
+
+# Add these settings for Cloudinary
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'ddc6oeww0',
+    'API_KEY': '239177631986154',
+    'API_SECRET': 'XIFNsNP7ts9i3sDf5sHKWiDgO5s'
+}
+
+
+
 # Static files configuration
 STATIC_URL = '/static/'  # URL for static files
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Directory for collected static files
@@ -190,13 +200,6 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
 
-
-# Add these settings for Cloudinary
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'ddc6oeww0',
-    'API_KEY': '239177631986154',
-    'API_SECRET': 'XIFNsNP7ts9i3sDf5sHKWiDgO5s'
-}
 
 
 
