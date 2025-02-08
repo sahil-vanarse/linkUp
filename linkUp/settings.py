@@ -50,7 +50,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',  # Made the change here 
     'django.contrib.staticfiles',
+    'cloudinary',  # Made the change here
     'django.contrib.postgres',
     'base.apps.BaseConfig',  # Custom application
     'rest_framework',  # Django REST framework
@@ -169,6 +171,7 @@ STATICFILES_DIRS = [
 # Media files configuration
 MEDIA_URL = '/media/'  # URL for media files
 MEDIA_ROOT = BASE_DIR / 'media'  # Directory for uploaded media files
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Whitenoise configuration for serving static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -186,6 +189,16 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:3000',
 ]
+
+
+# Add these settings for Cloudinary
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'ddc6oeww0',
+    'API_KEY': '239177631986154',
+    'API_SECRET': 'XIFNsNP7ts9i3sDf5sHKWiDgO5s'
+}
+
+
 
 # Jazzmin settings for the Django admin interface
 JAZZMIN_SETTINGS = {

@@ -270,16 +270,55 @@ def deleteMessage(request, pk):
     return render(request, 'base/delete.html', {'obj': message})
 
 
+# @login_required(login_url='login')
+# def updateUser(request):
+#     user = request.user
+#     form = UserForm(instance=user)
+
+#     error = None
+
+#     if request.method == "POST":
+#         form = UserForm(request.POST, request.FILES, instance=user)
+#         if form.is_valid():
+#             user = form.save(commit=False)
+            
+#             # Handle password change if new password is provided
+#             new_password = form.cleaned_data.get('new_password1')
+#             if new_password:
+#                 user.set_password(new_password)
+            
+#             user.save()
+            
+#             # If password was changed, update the session
+#             if new_password:
+#                 update_session_auth_hash(request, user)
+#                 messages.success(request, 'Your password was successfully updated!')
+            
+#             messages.success(request, 'Profile updated successfully!')
+#             return redirect('user-profile', pk=user.id)
+#         else:
+#             error = messages.error(request, 'Please correct the errors below.')
+            
+#     return render(request, 'base/update-user.html', {'form': form})
+
+
 @login_required(login_url='login')
 def updateUser(request):
     user = request.user
     form = UserForm(instance=user)
-
     error = None
 
     if request.method == "POST":
         form = UserForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
+            # Delete old avatar if it exists and a new one is being uploaded
+            if 'avatar' in request.FILES and user.avatar and user.avatar.name != 'avatar.svg':
+                try:
+                    # Cloudinary will handle the deletion automatically
+                    user.avatar.delete(save=False)
+                except Exception as e:
+                    print(f"Error deleting old avatar: {e}")
+            
             user = form.save(commit=False)
             
             # Handle password change if new password is provided

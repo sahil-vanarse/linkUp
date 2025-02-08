@@ -53,6 +53,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager # type: ign
 from django.contrib.postgres.fields import ArrayField # type: ignore
 from django.contrib.postgres.search import SearchVectorField # type: ignore # type: ignore  
 
+from cloudinary_storage.storage import RawMediaCloudinaryStorage  # made the changes here 
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -79,7 +81,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, null=True, db_index=True)
     username = models.CharField(max_length=200, null=True, blank=True, unique=True)  # Make username optional and unique
     bio = models.TextField(null=True, default="Hey there! I'm using this app.")
-    avatar = models.ImageField(null=True, default="avatar.svg")
+    avatar = models.ImageField(null=True, default="avatar.svg", storage=RawMediaCloudinaryStorage(), upload_to='avatars/')  # here changed
     search_vector = SearchVectorField(null=True)
 
     USERNAME_FIELD = 'email'
