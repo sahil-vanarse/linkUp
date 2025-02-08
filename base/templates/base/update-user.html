@@ -36,10 +36,10 @@
                     <form class="form" action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
 
-                        <div class="form__group">
+                        {% comment %} <div class="form__group">
                             <label for="avatar">Avatar</label>
                             {{ form.avatar }}
-                        </div>
+                        </div> {% endcomment %}
 
                         <div class="form__group" style="display: flex; justify-content: space-between;">
                             <div style="flex: 1; margin-right: 10px;">

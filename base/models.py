@@ -82,7 +82,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, null=True, db_index=True)
     username = models.CharField(max_length=200, null=True, blank=True, unique=True)  # Make username optional and unique
     bio = models.TextField(null=True, default="Hey there! I'm using this app.")
-    avatar = models.ImageField(null=True, blank=True, default="avatar.svg", storage=CustomCloudinaryStorage(), upload_to='avatars/')  # here changed
+    avatar = models.ImageField(null=True, blank=True, default="avatar.svg", storage=CustomCloudinaryStorage())  # here changed
     search_vector = SearchVectorField(null=True)
 
     USERNAME_FIELD = 'email'
@@ -100,8 +100,8 @@ class User(AbstractUser):
         return self.email
     
     def get_avatar_url(self):
-        if self.avatar and hasattr(self.avatar, 'url'):
-            return self.avatar.url
+        # if self.avatar and hasattr(self.avatar, 'url'):
+        #     return self.avatar.url
         return '/media/avatar.svg'  # Replace with your default avatar path
 
 
