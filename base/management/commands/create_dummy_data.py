@@ -4,7 +4,6 @@ from base.models import Room, Message, Topic
 from faker import Faker
 import random
 from datetime import datetime, timedelta
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 User = get_user_model()
 fake = Faker(['en_IN'])
@@ -20,102 +19,74 @@ class Command(BaseCommand):
         num_users = kwargs['num_users']
         num_messages = kwargs['num_messages']
 
-        # Tech-focused topics
-        topics = ["AI",
-    "ML",
-    "API",
-    "DBMS",
-    "Cloud",
-    "Docker",
-    "K8s",
-    "Git",
-    "Crypto"
-    "Blockchain"]
-        
-        for topic_name in topics:
-            Topic.objects.get_or_create(name=topic_name)
-
         # Create dummy users with Indian names
         dummy_users = []
-        indian_surnames = ['Jadhav', 'Payelkar', 'Malavde', 'Kale', 'Landge', 'Shirshivkar', 'Korgaonkar', 'Das']
+        indian_surnames = ['Tambe', 'Gadge', 'Dhande', 'Sawant', 'Khairnar',  
+                           'Dabholkar', 'Lad', 'Palande', 'Ketkar', 'Ambekar']
         
         for i in range(num_users):
             first_name = fake.first_name()
             last_name = random.choice(indian_surnames)
             email = f"{first_name.lower()}.{last_name.lower()}{i}@example.com"
-            
-            # Create user with all required fields from your User model
+
             user = User.objects.create_user(
                 email=email,
                 password="dummypass123",
                 name=f"{first_name} {last_name}",
-                username=f"{first_name.lower()}_{last_name.lower()}",
-                # bio=fake.text(max_nb_chars=200),
-                # avatar will use the default value from your model
+                username=f"{first_name.lower()}",
             )
             dummy_users.append(user)
             self.stdout.write(f"Created user: {user.name} ({email})")
 
-        # Technical room names
-        room_names = [
-            "MongoDB & NoSQL Databases",
-    "CI/CD Pipelines with Jenkins",
-    "Version Control with Git",
-    "Serverless Computing with AWS Lambda",
-    "Network Security Practices",
-    "Artificial Intelligence Solutions",
-    "Machine Learning Frameworks",
-    "Blockchain Development",
-    "Data Warehousing Concepts",
-    "DevOps Automation Tools"
-        ]
+        # New set of room names with assigned topics
+        rooms_with_topics = {
+            "Deep Learning Innovations": "AI",
+            "Cybersecurity Best Practices": "Security",
+            "Cloud-Native Architectures": "Cloud",
+            "Data Science with Python": "ML",
+            "Kubernetes for Scalable Applications": "DevOps",
+            "SQL vs NoSQL Databases": "DBMS",
+            "Advanced Git Strategies": "Git",
+            "Smart Contracts with Solidity": "Blockchain",
+            "Big Data Analytics": "DBMS",
+            "CI/CD Best Practices": "DevOps"
+        }
 
-        room_descriptions = [
-    "Discuss non-relational databases, MongoDB queries, and scaling strategies.",
-    "Learn to build, test, and deploy applications using Jenkins pipelines.",
-    "Master Git commands, branching strategies, and version control workflows.",
-    "Explore serverless architectures and AWS Lambda use cases.",
-    "Share best practices for securing networks and preventing intrusions.",
-    "Explore AI frameworks and practical implementations for real-world problems.",
-    "Learn TensorFlow, PyTorch, and other frameworks for predictive modeling.",
-    "Discuss smart contracts, dApps, and blockchain protocols.",
-    "Share insights on building and optimizing data warehouses for analytics.",
-    "Explore tools for automating infrastructure and streamlining DevOps workflows."
-]
-
+        # Ensure topics exist in the database
+        topic_instances = {name: Topic.objects.get_or_create(name=name)[0] for name in set(rooms_with_topics.values())}
 
         # Create rooms
         rooms = []
-        for i in range(min(len(room_names), num_users // 2)):
-            topic = Topic.objects.order_by('?').first()
+        for room_name, topic_name in rooms_with_topics.items():
             host = random.choice(dummy_users)
+            topic = topic_instances[topic_name]
+
             room = Room.objects.create(
                 host=host,
                 topic=topic,
-                name=room_names[i],
-                description=room_descriptions[i],
+                name=room_name,
+                description=fake.sentence(),
             )
+
             # Add 1-5 random participants
             participants = random.sample(dummy_users, random.randint(1, 5))
             room.participants.add(*participants)
             rooms.append(room)
-            self.stdout.write(f"Created room: {room.name}")
+            self.stdout.write(f"Created room: {room.name} under topic {topic.name}")
 
-
-
+        # Technical messages
         technical_messages = [
-    "I've been optimizing MongoDB queries lately. Indexing really improved performance! What are your thoughts?",
-    "We automated our CI/CD pipeline using Jenkins last month. Deployments are so much smoother now!",
-    "Handling merge conflicts in Git used to be a nightmare, but rebasing helped a lot. How do you guys manage it?",
-    "Migrated a few workloads to AWS Lambda recently. Serverless is amazing but debugging can be tricky!",
-    "Just updated our network security policies. Firewalls and 2FA made a big difference in preventing breaches.",
-    "AI models are getting so powerful! I just built a small chatbot with transformers, and it works surprisingly well!",
-    "TensorFlow vs PyTorch is always a debate. Personally, I find PyTorch easier to debug. What do you all prefer?",
-    "Just deployed my first smart contract on Ethereum. Gas fees are high, but the experience was awesome!",
-    "Optimizing data warehouse queries saved us hours of processing time. Partitioning made a huge difference!",
-    "Infrastructure as code is a lifesaver. Terraform made scaling so much easier for our cloud setup!"
-]
-
+            "Deep learning models are getting better at NLP tasks. Any favorite frameworks?",
+            "Security breaches are increasing! MFA and zero-trust policies are a must.",
+            "Cloud-native apps with Kubernetes are the future! How are you managing workloads?",
+            "Python dominates in data science. Pandas and NumPy make life easy!",
+            "Microservices with Kubernetes helped us scale like never before!",
+            "SQL is great for structured data, but NoSQL rocks for scalability. Thoughts?",
+            "Advanced Git workflows like cherry-picking and interactive rebase can be lifesavers.",
+            "Ethereum's transition to Proof-of-Stake is game-changing for smart contracts!",
+            "Big Data tools like Apache Spark and Hadoop help process petabytes of data!",
+            "CI/CD automation cuts deployment time in half. What's your favorite CI tool?"
+        ]
 
         # Generate messages
         for user in dummy_users:
